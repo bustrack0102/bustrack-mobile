@@ -1,0 +1,25 @@
+rules:
+  - id: bustrack-dart-no-hardcoded-secret
+    languages: [dart]
+    severity: ERROR
+    message: No hardcodear secretos en la app.
+    patterns:
+      - pattern: |
+          const $X = "...";
+      - metavariable-regex:
+          metavariable: $X
+          regex: (?i).*(password|secret|apikey|api_key|token).*
+  - id: bustrack-dart-insecure-http
+    languages: [dart]
+    severity: ERROR
+    message: Usar HTTPS; no HTTP en produccion.
+    pattern-regex: "http://(?!localhost|127\\.0\\.0\\.1)[^\"']+"
+  - id: bustrack-dart-print-sensitive
+    languages: [dart]
+    severity: WARNING
+    message: No imprimir tokens ni credenciales.
+    patterns:
+      - pattern: print($X);
+      - metavariable-regex:
+          metavariable: $X
+          regex: (?i).*(token|password|secret).*

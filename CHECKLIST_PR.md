@@ -1,28 +1,57 @@
-# CHECKLIST_PR.md — Gate obligatorio (1 revisor, `main` protegida)
+# CHECKLIST_PR.md — BusTrack Mobile
 
-> Constitución §8. PR = 1 slice feature. Sin verde no hay merge.
+> Completar en cada Pull Request. Una casilla sin evidencia no cuenta.
 
-## Pre-vuelo
+## Spec y alcance
 
-- [ ] `Memoria.md` actualizado (estado, decisiones con porqué, errores a evitar)
-- [ ] Spec en `specs/FT-0X/` conciliada con lo implementado (Aprobación resuelta)
-- [ ] Sin secretos en código/logs/errores. `keys.properties` gitignored
+- [ ] Existen `spec.md`, `plan.md`, `task.md` y `chart.md` para el cambio.
+- [ ] El PR implementa solo el alcance aprobado.
+- [ ] No se declara implementado lo que no existe en código/pruebas.
+- [ ] `Memoria.md` actualizado con estado y decisión.
 
-## Build y análisis
+## Arquitectura
 
-- [ ] `./gradlew assembleDebug` verde antes de test
-- [ ] `./gradlew lint detekt ktlintCheck --no-daemon` verde
-- [ ] `./gradlew testDebugUnitTest koverVerify --no-daemon` verde (cobertura ≥45%)
-- [ ] `./gradlew compileDebugAndroidTestSources --no-daemon` verde
+- [ ] Se respeta la tecnología objetivo: Flutter + Dart, arquitectura feature-first; gestor de estado y DI pendientes de autorización.
+- [ ] No se introducen dependencias o servicios no aprobados.
+- [ ] Se respetan los contratos de `docs/contratos-integracion.md`.
+- [ ] No hay acceso de clientes a Cosmos DB ni duplicación de la API.
 
-## Testing
+## Calidad
 
-- [ ] Unit/Security/Contract 100% verdes (`--no-daemon`)
-- [ ] Contract con `CAPTURE=1` regenerado si aplica, sin flag solo valida
-- [ ] Delta-coverage `--min 80 --advisory` informado (no bloquea)
+- [ ] Formateo y lint en verde.
+- [ ] Build en verde o bloqueo real documentado.
+- [ ] Sin código muerto, placeholders ni `TODO` sin issue.
+- [ ] Sin secretos, tokens ni PII en código, logs o fixtures.
 
-## Seguridad / SDD
+## Seguridad
 
-- [ ] `critic-guardrails` → PASS, `check_endpoints-internos` → OK
-- [ ] CodeQL/Semgrep 0 nuevos
-- [ ] TOML/YAML validados
+- [ ] Entradas validadas y salidas codificadas.
+- [ ] Autenticación/autorización revisadas cuando aplica.
+- [ ] Semgrep sin hallazgos nuevos.
+- [ ] Dependencias escaneadas y vulnerabilidades justificadas.
+
+## Pruebas
+
+- [ ] Pruebas unitarias nuevas/actualizadas.
+- [ ] Pruebas de integración/contrato si cambia un endpoint.
+- [ ] Pruebas de seguridad si cambia auth, sesión o datos sensibles.
+- [ ] Evidencia de ejecución adjunta (comando y resultado).
+
+## Documentación y compatibilidad
+
+- [ ] README/endpoints/contratos actualizados.
+- [ ] Enlaces relativos válidos.
+- [ ] Cambios compatibles o versionados.
+- [ ] Migración documentada si cambia stack o persistencia.
+
+## Integración
+
+- [ ] El contrato consumido por Flutter/Angular/API sigue vigente.
+- [ ] No se rompe a otro repositorio sin spec de migración.
+- [ ] Variables de entorno documentadas; sin valores reales.
+
+## Revisión
+
+- [ ] Un revisor adicional aprobó.
+- [ ] CI en verde.
+- [ ] No se hizo commit/push/despliegue sin autorización.

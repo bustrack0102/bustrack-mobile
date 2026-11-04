@@ -1,4 +1,4 @@
-name: CI PR
+name: CI
 on:
   pull_request:
   push:
@@ -10,13 +10,38 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
+      - name: Detectar stack
+        id: stack
+        shell: bash
+        run: |
+          if [ -f pubspec.yaml ]; then
+            echo "stack=flutter" >> "$GITHUB_OUTPUT"
+          else
+            echo "stack=kotlin" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Configurar Java
+        if: steps.stack.outputs.stack == 'kotlin'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Configurar Flutter
+        if: steps.stack.outputs.stack == 'flutter'
+        uses: subosito/flutter-action@v2
         with:
           channel: stable
-      - run: flutter pub get
-      - run: dart format --output=none --set-exit-if-changed .
-      - run: flutter analyze
-      - run: flutter test --coverage
+      - name: Validacion Flutter
+        if: steps.stack.outputs.stack == 'flutter'
+        run: |
+          flutter pub get
+          dart format --output=none --set-exit-if-changed .
+          flutter analyze
+          flutter test --coverage
+      - name: Validacion Kotlin
+        if: steps.stack.outputs.stack == 'kotlin'
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon detekt ktlintCheck test koverVerify
       - name: Semgrep
         uses: semgrep/semgrep-action@v1
         with:

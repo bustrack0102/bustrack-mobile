@@ -1,6 +1,6 @@
 # Memoria técnica — BusTrack Mobile
 
-> Registro vivo. No se borra historial. Última actualización: 2026-11-10.
+> Registro vivo. No se borra historial. Última actualización: 2026-11-11.
 
 ## 1. Estado real
 
@@ -75,3 +75,31 @@ Flutter -> API central por HTTPS/REST. No acceso directo a Cosmos ni a ML/GenAI.
   - **Motivo:** Autorización explícita del usuario para enviar los cambios a Git y mantener trazabilidad estricta en `Memoria.md`.
   - **Archivos afectados:** Árbol completo de specs, specs-endpoints, código Flutter (`lib/`, `test/`, `web/`, configuración) y `Memoria.md`.
   - **Estado:** Repositorio local sincronizado con remoto.
+- **2026-11-10:** definición e implementación de la Configuración Global de Diseño, Seguridad, A11y y Preparación para Google Play Store.
+  - **Decisión:** Establecer el sistema de diseño global, componentes reutilizables Flutter, estándares de seguridad (OWASP MASVS L2, Android Keystore), privacidad (minimización, flujo de eliminación de cuenta in-app y web), matriz de permisos mínimos y checklist técnico de Google Play Store (targetSdkVersion 36 / Android 16).
+  - **Motivo:** Complementar el proyecto móvil con una guía maestra y componentes aplicables a todas las pantallas presentes y futuras de BusTrack.
+  - **Archivos afectados:** `docs/configuracion-global-diseno-seguridad-playstore.md`, `lib/core/theme/app_colors.dart`, `lib/core/widgets/app_buttons.dart`, `lib/core/widgets/app_dropdown.dart`, `lib/core/widgets/app_controls.dart`, `lib/core/widgets/app_card.dart`, `lib/core/widgets/app_dialogs.dart`, `lib/core/widgets/app_states.dart`, `Memoria.md`.
+  - **Estado:** Guía maestra documentada y catálogo de componentes globales implementado en `lib/core/widgets/`.
+  - **Riesgos:** Preserva la identidad visual existente y cumple con los estándares vigentes de Google Play.
+  - **Relación con otros repos:** Contratos alineados con API central Azure (`DELETE /api/v1/auth/account`, `POST /api/v1/auth/login`, endpoints de transporte) y portal web externo de privacidad.
+- **2026-11-10:** especificación operacional para Prueba Interna en Google Play Console.
+  - **Decisión:** Documentar el flujo integral para firma (Keystore), compilación del Android App Bundle (`.aab`), configuración de la pista de prueba interna (*Internal Testing Track*), declaraciones de *Data Safety* y distribución a testers.
+  - **Motivo:** Habilitar el despliegue inmediato de la versión de prueba interna en Google Play Console.
+  - **Archivos afectados:** `docs/guia-prueba-interna-playstore.md`, `Memoria.md`.
+  - **Estado:** Guía paso a paso generada y alineada con la pista interna de Google Play.
+  - **Riesgos:** Mantener resguardo local del archivo `.jks` sin subirlo al control de versiones.
+  - **Relación con otros repos:** Vinculado al contrato de privacidad y autenticación de BusTrack.
+- **2026-11-10:** generación del andamiaje nativo Android para Flutter y configuración de paquete.
+  - **Decisión:** Generar la infraestructura `android/` de Flutter con `namespace` y `applicationId = com.bustrack.mobile`, `android:label = BusTrack` y `MainActivity.kt`.
+  - **Motivo:** Habilitar la compilación oficial de Android App Bundle (`.aab`) para Google Play Console.
+  - **Archivos afectados:** `android/`, `android/app/build.gradle.kts`, `android/app/src/main/AndroidManifest.xml`, `android/app/src/main/kotlin/com/bustrack/mobile/MainActivity.kt`, `Memoria.md`.
+  - **Estado:** Andamiaje Android de Flutter configurado con paquete oficial `com.bustrack.mobile`.
+  - **Riesgos:** Ninguno.
+  - **Relación con otros repos:** Alineación con identificadores del ecosistema BusTrack.
+- **2026-11-11:** workflow de GitHub Actions para compilación de AAB en la nube.
+  - **Decisión:** Crear `.github/workflows/build-aab.yml` que compila `flutter build appbundle --release` en `ubuntu-latest` con Java 17 y Flutter stable, y sube el `.aab` como artefacto descargable (retención 90 días).
+  - **Motivo:** El equipo de desarrollo no dispone de Android SDK local; la compilación en la nube permite generar el AAB firmado con claves de depuración para la pista de prueba interna de Google Play Console.
+  - **Archivos afectados:** `.github/workflows/build-aab.yml`, `Memoria.md`.
+  - **Estado:** Workflow creado y pendiente de ejecución tras push a `origin/main`.
+  - **Riesgos:** El AAB se firma con claves de depuración (suficiente para prueba interna con Google Play App Signing habilitado); para producción se requerirá un upload keystore dedicado.
+  - **Relación con otros repos:** Ninguna directa; el artefacto generado se sube manualmente a Google Play Console.

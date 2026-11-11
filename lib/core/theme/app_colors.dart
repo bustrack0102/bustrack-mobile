@@ -30,5 +30,20 @@ class AppColors {
 
   /// Verde para estados activos y confirmaciones (#059669)
   static const Color success = Color(0xFF059669);
+
+  /// Naranja/Ámbar para advertencias y avisos amigables (#D97706)
+  static const Color warning = Color(0xFFD97706);
+
+  /// Rojo de alerta para errores y validaciones fallidas (#DC2626)
+  static const Color error = Color(0xFFDC2626);
+
+  /// Gris pizarra para banners de estado sin conexión (#475569)
+  static const Color offline = Color(0xFF475569);
+
+  /// Gris suave para bordes o componentes deshabilitados (#E2E8F0)
+  static const Color disabled = Color(0xFFE2E8F0);
+
+  /// Gris de texto para elementos deshabilitados (#94A3B8)
+  static const Color disabledText = Color(0xFF94A3B8);
 }
 

@@ -1,6 +1,6 @@
 # 05-gestion-de-sesiones — Gestión de sesiones
 
-> Repositorio: BusTrack Mobile · Estado: Parcial · Fecha: 2026-10-30.
+> Repositorio: BusTrack Mobile · Estado: Parcial · Fecha: 2026-11-10.
 
 ## 1. Objetivo
 

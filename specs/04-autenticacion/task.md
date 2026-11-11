@@ -10,7 +10,7 @@
 
 ## Actividades
 
-### T01. Documentar flujo Kotlin
+### [x] T01. Documentar flujo Kotlin
 
 - Validaciones.
 - Estados.
@@ -20,7 +20,7 @@
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### T02. Definir flujo Flutter
+### [-] T02. Definir flujo Flutter
 
 - Widgets.
 - Estado.
@@ -30,7 +30,7 @@
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### T03. Definir pruebas
+### [-] T03. Definir pruebas
 
 - Éxito.
 - Credencial inválida.

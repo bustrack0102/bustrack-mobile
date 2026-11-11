@@ -10,7 +10,7 @@
 
 ## Actividades
 
-### T01. Definir flujo de búsqueda
+### [ ] T01. Definir flujo de búsqueda
 
 - Destino.
 - Empresa.
@@ -20,7 +20,7 @@
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### T02. Definir detalle
+### [ ] T02. Definir detalle
 
 - Paradas.
 - Horarios.
@@ -30,7 +30,7 @@
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### T03. Definir pruebas
+### [ ] T03. Definir pruebas
 
 - Búsqueda.
 - Vacío.

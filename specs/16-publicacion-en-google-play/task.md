@@ -10,7 +10,7 @@
 
 ## Actividades
 
-### T01. Preparar firma y build
+### [ ] T01. Preparar firma y build
 
 - Keystore.
 - Ofuscación.
@@ -20,7 +20,7 @@
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### T02. Preparar ficha y privacidad
+### [ ] T02. Preparar ficha y privacidad
 
 - Textos.
 - Capturas.
@@ -30,7 +30,7 @@
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### T03. Definir checklist de publicación
+### [ ] T03. Definir checklist de publicación
 
 - Requisitos.
 - Revisión.

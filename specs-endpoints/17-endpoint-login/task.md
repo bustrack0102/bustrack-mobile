@@ -1,10 +1,10 @@
 # Tareas — 17-endpoint-login — Consumo del endpoint de login
 
-> Spec: `spec.md` · Plan: `plan.md` · Estado: Implementado en Kotlin.
+> Spec: `spec.md` · Plan: `plan.md` · Estado: Implementado en Kotlin / Parcial en Flutter.
 
 ## Actividades
 
-### T01. Verificar cliente Kotlin
+### [x] T01. Verificar cliente Kotlin
 
 - Retrofit.
 - DTO.
@@ -14,7 +14,7 @@
 
 **Terminado cuando:** existe evidencia verificable.
 
-### T02. Definir paridad Flutter
+### [-] T02. Definir paridad Flutter (UI implementada / Consumo HTTP pendiente)
 
 - Cliente HTTP.
 - DTO.

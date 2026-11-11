@@ -4,7 +4,7 @@
 
 ## Actividades
 
-### T01. Definir contrato
+### [ ] T01. Definir contrato
 
 - POST.
 - GET.
@@ -13,7 +13,7 @@
 
 **Terminado cuando:** existe evidencia verificable.
 
-### T02. Definir pruebas
+### [ ] T02. Definir pruebas
 
 - Auth.
 - Rango.

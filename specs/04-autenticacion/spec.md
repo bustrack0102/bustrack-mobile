@@ -1,6 +1,6 @@
 # 04-autenticacion — Autenticación en la aplicación
 
-> Repositorio: BusTrack Mobile · Estado: Parcial · Fecha: 2026-10-30.
+> Repositorio: BusTrack Mobile · Estado: Parcial · Fecha: 2026-11-10.
 
 ## 1. Objetivo
 
@@ -8,7 +8,7 @@ Implementar login con validación, estado de UI y bloqueo de doble envío, con p
 
 ## 2. Contexto
 
-Implementado en Kotlin; pendiente en Flutter.
+Implementado en Kotlin. En Flutter la UI de login, registro y verificación OTP está implementada con pruebas de widgets; pendiente consumo HTTP real.
 
 ## 3. Alcance
 

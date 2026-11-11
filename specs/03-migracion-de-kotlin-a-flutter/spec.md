@@ -1,6 +1,6 @@
 # 03-migracion-de-kotlin-a-flutter — Migración de Kotlin/Compose a Flutter
 
-> Repositorio: BusTrack Mobile · Estado: Pendiente · Fecha: 2026-10-30.
+> Repositorio: BusTrack Mobile · Estado: Parcial · Fecha: 2026-11-10.
 
 ## 1. Objetivo
 
@@ -8,7 +8,7 @@ Planificar y ejecutar por fases la migración funcional de Kotlin a Flutter cons
 
 ## 2. Contexto
 
-Kotlin tiene login, sesión y logout. Flutter no existe todavía.
+Kotlin tiene login, sesión y logout implementados. En Flutter se implementó la base UI de autenticación y navegación inicial; falta migrar la integración de red y almacenamiento seguro.
 
 ## 3. Alcance
 

@@ -1,6 +1,6 @@
 # Tareas — 03-migracion-de-kotlin-a-flutter — Migración de Kotlin/Compose a Flutter
 
-> Spec: `spec.md` · Plan: `plan.md` · Estado: Pendiente.
+> Spec: `spec.md` · Plan: `plan.md` · Estado: Parcial.
 > Marcar solo con evidencia. No marcar por documentar.
 
 ## Dependencias
@@ -10,7 +10,7 @@
 
 ## Actividades
 
-### T01. Inventariar Kotlin
+### [x] T01. Inventariar Kotlin
 
 - Pantallas.
 - Reglas.
@@ -20,7 +20,7 @@
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### T02. Migrar por flujos
+### [-] T02. Migrar por flujos
 
 - Login.
 - Sesión.
@@ -30,7 +30,7 @@
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### T03. Validar paridad
+### [ ] T03. Validar paridad
 
 - Pruebas.
 - Reversión.

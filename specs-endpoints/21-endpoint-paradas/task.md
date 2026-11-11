@@ -4,7 +4,7 @@
 
 ## Actividades
 
-### T01. Definir contrato
+### [ ] T01. Definir contrato
 
 - Orden.
 - DTO.
@@ -13,7 +13,7 @@
 
 **Terminado cuando:** existe evidencia verificable.
 
-### T02. Definir pruebas
+### [ ] T02. Definir pruebas
 
 - Orden.
 - 404.

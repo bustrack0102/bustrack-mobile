@@ -10,7 +10,7 @@
 
 ## Actividades
 
-### T01. Definir contrato
+### [ ] T01. Definir contrato
 
 - Lote.
 - Resultado.
@@ -19,7 +19,7 @@
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### T02. Definir envío
+### [ ] T02. Definir envío
 
 - Reintentos.
 - Errores.
@@ -28,7 +28,7 @@
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### T03. Definir pruebas
+### [ ] T03. Definir pruebas
 
 - Éxito.
 - Timeout.

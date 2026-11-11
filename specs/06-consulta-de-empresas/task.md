@@ -10,7 +10,7 @@
 
 ## Actividades
 
-### T01. Definir pantallas
+### [ ] T01. Definir pantallas
 
 - Listado.
 - Detalle.
@@ -20,7 +20,7 @@
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### T02. Definir contrato
+### [ ] T02. Definir contrato
 
 - Endpoint.
 - DTO.
@@ -29,7 +29,7 @@
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### T03. Definir pruebas
+### [ ] T03. Definir pruebas
 
 - Widget.
 - Vacío.

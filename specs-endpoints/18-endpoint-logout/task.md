@@ -4,7 +4,7 @@
 
 ## Actividades
 
-### T01. Verificar cliente Kotlin
+### [x] T01. Verificar cliente Kotlin
 
 - Header.
 - Manejo de error.
@@ -13,7 +13,7 @@
 
 **Terminado cuando:** existe evidencia verificable.
 
-### T02. Definir paridad Flutter
+### [ ] T02. Definir paridad Flutter
 
 - Header.
 - Local-first.

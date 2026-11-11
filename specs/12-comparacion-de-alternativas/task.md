@@ -10,7 +10,7 @@
 
 ## Actividades
 
-### T01. Definir criterios
+### [ ] T01. Definir criterios
 
 - Tiempo.
 - Tarifa.
@@ -20,7 +20,7 @@
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### T02. Definir UI comparativa
+### [ ] T02. Definir UI comparativa
 
 - Tabla/tarjetas.
 
@@ -28,7 +28,7 @@
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### T03. Definir pruebas
+### [ ] T03. Definir pruebas
 
 - Orden.
 - Vacío.

@@ -10,7 +10,7 @@
 
 ## Actividades
 
-### T01. Definir formulario
+### [ ] T01. Definir formulario
 
 - Rango.
 - Comentario.
@@ -19,7 +19,7 @@
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### T02. Definir consulta
+### [ ] T02. Definir consulta
 
 - Agregados.
 
@@ -27,7 +27,7 @@
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### T03. Definir pruebas
+### [ ] T03. Definir pruebas
 
 - Auth.
 - Rango.

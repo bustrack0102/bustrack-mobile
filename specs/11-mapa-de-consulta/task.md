@@ -10,7 +10,7 @@
 
 ## Actividades
 
-### T01. Definir alcance del mapa
+### [ ] T01. Definir alcance del mapa
 
 - Datos.
 - Permisos.
@@ -20,7 +20,7 @@
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### T02. Definir integración
+### [ ] T02. Definir integración
 
 - Mapas.
 - Marcadores.
@@ -29,7 +29,7 @@
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### T03. Definir pruebas
+### [ ] T03. Definir pruebas
 
 - Marcadores.
 - Sin permiso.

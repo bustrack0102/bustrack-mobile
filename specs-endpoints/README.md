@@ -8,8 +8,8 @@
 
 | ID | Método y ruta | Nombre | Estado |
 |---|---|---|---|
-| `17-endpoint-login` | `POST /api/v1/auth/login` | Consumo del endpoint de login | Implementado en Kotlin |
-| `18-endpoint-logout` | `POST /api/v1/auth/logout` | Consumo del endpoint de logout | Implementado en Kotlin |
+| `17-endpoint-login` | `POST /api/v1/auth/login` | Consumo del endpoint de login | Implementado en Kotlin / Parcial en Flutter |
+| `18-endpoint-logout` | `POST /api/v1/auth/logout` | Consumo del endpoint de logout | Implementado en Kotlin / Pendiente en Flutter |
 | `19-endpoint-empresas` | `GET /api/v1/empresas` | Consumo del endpoint de empresas | Propuesto |
 | `20-endpoint-rutas` | `GET /api/v1/rutas` | Consumo del endpoint de rutas | Propuesto |
 | `21-endpoint-paradas` | `GET /api/v1/rutas/{id}/paradas` | Consumo del endpoint de paradas | Propuesto |

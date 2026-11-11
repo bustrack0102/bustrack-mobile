@@ -10,7 +10,7 @@
 
 ## Actividades
 
-### T01. Documentar almacenamiento
+### [-] T01. Documentar almacenamiento (Implementado en Kotlin / Pendiente en Flutter)
 
 - Claves.
 - Cifrado.
@@ -20,7 +20,7 @@
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### T02. Definir restauración
+### [-] T02. Definir restauración (Implementado en Kotlin / Pendiente en Flutter)
 
 - Arranque.
 - Token expirado.
@@ -29,7 +29,7 @@
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### T03. Definir pruebas
+### [-] T03. Definir pruebas (Implementado en Kotlin / Pendiente en Flutter)
 
 - Persistencia.
 - Expiración.

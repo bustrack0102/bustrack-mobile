@@ -1,6 +1,6 @@
 # 18-endpoint-logout — Consumo del endpoint de logout
 
-> Repositorio: BusTrack Mobile · Endpoint: `POST /api/v1/auth/logout` · Estado: Implementado en Kotlin · Fecha: 2026-10-30.
+> Repositorio: BusTrack Mobile · Endpoint: `POST /api/v1/auth/logout` · Estado: Implementado en Kotlin · Fecha: 2026-11-10.
 
 ## 1. Objetivo
 

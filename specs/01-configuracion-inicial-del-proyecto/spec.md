@@ -1,6 +1,6 @@
 # 01-configuracion-inicial-del-proyecto — Configuración inicial del proyecto
 
-> Repositorio: BusTrack Mobile · Estado: Parcial · Fecha: 2026-10-30.
+> Repositorio: BusTrack Mobile · Estado: Implementado · Fecha: 2026-11-10.
 
 ## 1. Objetivo
 
@@ -8,7 +8,7 @@ Dejar un proyecto móvil configurable, con dependencias, entornos y comandos rep
 
 ## 2. Contexto
 
-Existe la app Kotlin/Compose con Gradle, Koin, Retrofit y Kover. Flutter aún no existe.
+Existe la app Kotlin/Compose con Gradle, Koin, Retrofit y Kover, y la configuración base de Flutter en `pubspec.yaml`, `analysis_options.yaml` y árbol `lib/`.
 
 ## 3. Alcance
 
@@ -45,10 +45,10 @@ Existe la app Kotlin/Compose con Gradle, Koin, Retrofit y Kover. Flutter aún no
 
 ## 7. Criterios de aceptación
 
-- [ ] La tarea tiene criterios verificables y evidencia asociada.
-- [ ] No se declara implementado lo que no existe en código o pruebas.
-- [ ] Los contratos consumidos o expuestos quedan documentados.
-- [ ] `Memoria.md` refleja el estado resultante.
+- [x] La tarea tiene criterios verificables y evidencia asociada.
+- [x] No se declara implementado lo que no existe en código o pruebas.
+- [x] Los contratos consumidos o expuestos quedan documentados.
+- [x] `Memoria.md` refleja el estado resultante.
 
 ## 8. Dependencias
 

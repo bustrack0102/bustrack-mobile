@@ -1,6 +1,6 @@
 # 17-endpoint-login — Consumo del endpoint de login
 
-> Repositorio: BusTrack Mobile · Endpoint: `POST /api/v1/auth/login` · Estado: Implementado en Kotlin · Fecha: 2026-10-30.
+> Repositorio: BusTrack Mobile · Endpoint: `POST /api/v1/auth/login` · Estado: Implementado en Kotlin / Parcial en Flutter · Fecha: 2026-11-10.
 
 ## 1. Objetivo
 
@@ -14,7 +14,7 @@ Consumir el login de la API y mapear la respuesta a la sesión local.
 | Ruta | `/api/v1/auth/login` |
 | Autenticación | No aplica; es el endpoint que emite la sesión. |
 | Consumidor | App móvil |
-| Estado | Implementado en Kotlin |
+| Estado | Implementado en Kotlin / Parcial en Flutter |
 
 **Parámetros / entrada:**
 

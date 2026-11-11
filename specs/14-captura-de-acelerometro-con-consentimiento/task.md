@@ -10,7 +10,7 @@
 
 ## Actividades
 
-### T01. Diseñar consentimiento
+### [ ] T01. Diseñar consentimiento
 
 - Texto.
 - Revocación.
@@ -20,7 +20,7 @@
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### T02. Diseñar captura
+### [ ] T02. Diseñar captura
 
 - Frecuencia.
 - Tamaño de lote.
@@ -30,7 +30,7 @@
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### T03. Definir pruebas de privacidad
+### [ ] T03. Definir pruebas de privacidad
 
 - Sin consentimiento.
 - Revocación.

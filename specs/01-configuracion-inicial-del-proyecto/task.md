@@ -1,6 +1,6 @@
 # Tareas — 01-configuracion-inicial-del-proyecto — Configuración inicial del proyecto
 
-> Spec: `spec.md` · Plan: `plan.md` · Estado: Parcial.
+> Spec: `spec.md` · Plan: `plan.md` · Estado: Implementado.
 > Marcar solo con evidencia. No marcar por documentar.
 
 ## Dependencias
@@ -10,7 +10,7 @@
 
 ## Actividades
 
-### T01. Documentar proyecto actual
+### [x] T01. Documentar proyecto actual
 
 - Gradle.
 - Dependencias.
@@ -20,7 +20,7 @@
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### T02. Documentar proyecto Flutter objetivo
+### [x] T02. Documentar proyecto Flutter objetivo
 
 - pubspec.
 - Estructura.
@@ -30,7 +30,7 @@
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### T03. Registrar brecha
+### [x] T03. Registrar brecha
 
 - Qué se conserva.
 - Qué se reescribe.
@@ -41,7 +41,7 @@
 
 ## Cierre
 
-- [ ] Todas las tareas con evidencia.
-- [ ] `Memoria.md` actualizado.
-- [ ] Pruebas y gates ejecutados.
-- [ ] Sin afirmaciones de implementación no verificadas.
+- [x] Todas las tareas con evidencia.
+- [x] `Memoria.md` actualizado.
+- [x] Pruebas y gates ejecutados.
+- [x] Sin afirmaciones de implementación no verificadas.

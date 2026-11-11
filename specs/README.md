@@ -9,9 +9,9 @@
 
 | ID | Tarea | Estado |
 |---|---|---|
-| `01-configuracion-inicial-del-proyecto` | Configuración inicial del proyecto | Parcial |
-| `02-arquitectura-base-flutter` | Arquitectura base Flutter | Pendiente |
-| `03-migracion-de-kotlin-a-flutter` | Migración de Kotlin/Compose a Flutter | Pendiente |
+| `01-configuracion-inicial-del-proyecto` | Configuración inicial del proyecto | Implementado |
+| `02-arquitectura-base-flutter` | Arquitectura base Flutter | Parcial |
+| `03-migracion-de-kotlin-a-flutter` | Migración de Kotlin/Compose a Flutter | Parcial |
 | `04-autenticacion` | Autenticación en la aplicación | Parcial |
 | `05-gestion-de-sesiones` | Gestión de sesiones | Parcial |
 | `06-consulta-de-empresas` | Consulta de empresas | Pendiente |

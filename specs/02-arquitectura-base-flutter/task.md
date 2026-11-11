@@ -1,6 +1,6 @@
 # Tareas — 02-arquitectura-base-flutter — Arquitectura base Flutter
 
-> Spec: `spec.md` · Plan: `plan.md` · Estado: Pendiente.
+> Spec: `spec.md` · Plan: `plan.md` · Estado: Parcial.
 > Marcar solo con evidencia. No marcar por documentar.
 
 ## Dependencias
@@ -10,7 +10,7 @@
 
 ## Actividades
 
-### T01. Definir capas y carpetas
+### [x] T01. Definir capas y carpetas
 
 - Estructura feature-first.
 - Convenciones.
@@ -19,7 +19,7 @@
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### T02. Definir estado, DI y navegación
+### [-] T02. Definir estado, DI y navegación
 
 - Opciones.
 - Decisión pendiente.
@@ -28,7 +28,7 @@
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### T03. Definir red y errores
+### [ ] T03. Definir red y errores
 
 - Cliente HTTP.
 - Mapeo de errores.

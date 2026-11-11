@@ -1,6 +1,6 @@
 # 02-arquitectura-base-flutter — Arquitectura base Flutter
 
-> Repositorio: BusTrack Mobile · Estado: Pendiente · Fecha: 2026-10-30.
+> Repositorio: BusTrack Mobile · Estado: Parcial · Fecha: 2026-11-10.
 
 ## 1. Objetivo
 
@@ -8,7 +8,7 @@ Definir la arquitectura feature-first de Flutter: capas, estado, DI, navegación
 
 ## 2. Contexto
 
-No existe código Flutter; Kotlin/Compose sirve como referencia funcional.
+Estructura feature-first inicial implementada en `lib/` (core y features de UI con coordinador de navegación); cliente de red y gestor de estado/DI formal pendientes de autorización.
 
 ## 3. Alcance
 

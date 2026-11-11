@@ -103,3 +103,10 @@ Flutter -> API central por HTTPS/REST. No acceso directo a Cosmos ni a ML/GenAI.
   - **Estado:** Workflow creado y pendiente de ejecución tras push a `origin/main`.
   - **Riesgos:** El AAB se firma con claves de depuración (suficiente para prueba interna con Google Play App Signing habilitado); para producción se requerirá un upload keystore dedicado.
   - **Relación con otros repos:** Ninguna directa; el artefacto generado se sube manualmente a Google Play Console.
+- **2026-11-11:** corrección de versiones Gradle y AGP para compilación AAB.
+  - **Decisión:** Actualizar Gradle de 9.3.1 a 9.5.0 y Android Gradle Plugin de 9.1.0 a 9.1.1 (mínimos requeridos por Flutter stable).
+  - **Motivo:** El workflow de GitHub Actions falló porque Flutter exige AGP ≥ 9.1.1 y recomienda Gradle ≥ 9.5.0.
+  - **Archivos afectados:** `android/gradle/wrapper/gradle-wrapper.properties`, `android/settings.gradle.kts`, `Memoria.md`.
+  - **Estado:** Corrección aplicada; pendiente de validación en el siguiente run del workflow.
+  - **Riesgos:** Ninguno; versiones alineadas con Flutter stable actual.
+  - **Relación con otros repos:** Ninguna.

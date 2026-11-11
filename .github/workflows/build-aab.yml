@@ -42,3 +42,4 @@ jobs:
           path: build/app/outputs/bundle/release/app-release.aab
           retention-days: 90
           if-no-files-found: error
+

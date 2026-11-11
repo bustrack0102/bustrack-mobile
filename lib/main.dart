@@ -81,7 +81,9 @@ class _BusTrackNavigationCoordinatorState
           onVerificationSuccess: () {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('¡Correo verificado con éxito! Inicia sesión para continuar.'),
+                content: Text(
+                  '¡Correo verificado con éxito! Inicia sesión para continuar.',
+                ),
               ),
             );
             _navigateTo(AppScreenState.login);
@@ -98,7 +100,9 @@ class _BusTrackNavigationCoordinatorState
           onForgotPasswordTap: () {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Se ha enviado un enlace de recuperación a tu correo.'),
+                content: Text(
+                  'Se ha enviado un enlace de recuperación a tu correo.',
+                ),
               ),
             );
           },
@@ -116,4 +120,3 @@ class _BusTrackNavigationCoordinatorState
     }
   }
 }
-

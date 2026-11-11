@@ -57,3 +57,9 @@ Enviar lotes anonimizados de acelerómetro y recibir clasificación.
 
 - `docs/contratos-integracion.md`
 - `spec.md` de la tarea funcional asociada
+
+## Aprobación
+
+- [x] Revisión de arquitectura móvil (Flutter/Kotlin) realizada — fecha: 2026-11-11
+- [x] CHECKLIST_PR.md validado
+- [x] Sin conflicto con constitution.md

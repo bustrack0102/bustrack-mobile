@@ -63,9 +63,7 @@ class AppDropdown<T> extends StatelessWidget {
               color: isEnabled ? AppColors.inputBackground : AppColors.disabled,
               borderRadius: BorderRadius.circular(12.0),
               border: Border.all(
-                color: hasError
-                    ? AppColors.error
-                    : AppColors.inputBorder,
+                color: hasError ? AppColors.error : AppColors.inputBorder,
                 width: hasError ? 1.5 : 1.0,
               ),
             ),
@@ -112,7 +110,11 @@ class AppDropdown<T> extends StatelessWidget {
           const SizedBox(height: 6.0),
           Row(
             children: [
-              const Icon(Icons.error_outline_rounded, size: 14, color: AppColors.error),
+              const Icon(
+                Icons.error_outline_rounded,
+                size: 14,
+                color: AppColors.error,
+              ),
               const SizedBox(width: 4.0),
               Expanded(
                 child: Text(

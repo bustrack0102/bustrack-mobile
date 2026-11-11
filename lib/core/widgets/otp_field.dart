@@ -18,7 +18,10 @@ class OtpField extends StatefulWidget {
 }
 
 class _OtpFieldState extends State<OtpField> {
-  final List<TextEditingController> _controllers = List.generate(4, (_) => TextEditingController());
+  final List<TextEditingController> _controllers = List.generate(
+    4,
+    (_) => TextEditingController(),
+  );
   final List<FocusNode> _focusNodes = List.generate(4, (_) => FocusNode());
 
   @override
@@ -79,15 +82,24 @@ class _OtpFieldState extends State<OtpField> {
               contentPadding: EdgeInsets.zero,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
-                borderSide: const BorderSide(color: AppColors.inputBorder, width: 1.5),
+                borderSide: const BorderSide(
+                  color: AppColors.inputBorder,
+                  width: 1.5,
+                ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
-                borderSide: const BorderSide(color: AppColors.inputBorder, width: 1.5),
+                borderSide: const BorderSide(
+                  color: AppColors.inputBorder,
+                  width: 1.5,
+                ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
-                borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                borderSide: const BorderSide(
+                  color: AppColors.primary,
+                  width: 2,
+                ),
               ),
             ),
           ),
@@ -96,4 +108,3 @@ class _OtpFieldState extends State<OtpField> {
     );
   }
 }
-

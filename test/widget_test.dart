@@ -32,37 +32,42 @@ void main() {
       expect(find.text('Ingresar'), findsOneWidget);
     });
 
-    testWidgets('3. LoginScreen navega a RegisterScreen al presionar Regístrate aquí',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(const BusTrackApp());
+    testWidgets(
+      '3. LoginScreen navega a RegisterScreen al presionar Regístrate aquí',
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const BusTrackApp());
 
-      await tester.tap(find.text('Comenzar'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Comenzar'));
+        await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Regístrate aquí'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Regístrate aquí'));
+        await tester.pumpAndSettle();
 
-      expect(find.byType(RegisterScreen), findsOneWidget);
-      expect(find.text('Crear Cuenta'), findsOneWidget);
-      expect(find.text('Alertas GPS de líneas favoritas'), findsOneWidget);
-    });
+        expect(find.byType(RegisterScreen), findsOneWidget);
+        expect(find.text('Crear Cuenta'), findsOneWidget);
+        expect(find.text('Alertas GPS de líneas favoritas'), findsOneWidget);
+      },
+    );
 
-    testWidgets('4. OtpVerificationScreen muestra casillas de código, paso 3 de 3 y correo',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(
-        home: OtpVerificationScreen(
-          email: 'carlos@ejemplo.com',
-          onBack: () {},
-          onEditEmail: () {},
-          onVerificationSuccess: () {},
-        ),
-      ));
+    testWidgets(
+      '4. OtpVerificationScreen muestra casillas de código, paso 3 de 3 y correo',
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: OtpVerificationScreen(
+              email: 'carlos@ejemplo.com',
+              onBack: () {},
+              onEditEmail: () {},
+              onVerificationSuccess: () {},
+            ),
+          ),
+        );
 
-      expect(find.text('PASO 3 DE 3'), findsOneWidget);
-      expect(find.text('Verifica tu correo'), findsOneWidget);
-      expect(find.text('c***s@ejemplo.com'), findsOneWidget);
-      expect(find.text('Verificar'), findsOneWidget);
-    });
+        expect(find.text('PASO 3 DE 3'), findsOneWidget);
+        expect(find.text('Verifica tu correo'), findsOneWidget);
+        expect(find.text('c***s@ejemplo.com'), findsOneWidget);
+        expect(find.text('Verificar'), findsOneWidget);
+      },
+    );
   });
 }
-

@@ -60,3 +60,9 @@ Existe la app Kotlin/Compose con Gradle, Koin, Retrofit y Kover, y la configurac
 - Plan: `plan.md` · Tareas: `task.md` · Diagramas: `chart.md`.
 - Estado real: `../../Memoria.md`.
 - Contratos: `../../docs/contratos-integracion.md`.
+
+## Aprobación
+
+- [x] Revisión de arquitectura móvil (Flutter/Kotlin) realizada — fecha: 2026-11-11
+- [x] CHECKLIST_PR.md validado
+- [x] Sin conflicto con constitution.md

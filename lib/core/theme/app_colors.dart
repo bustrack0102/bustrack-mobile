@@ -46,4 +46,3 @@ class AppColors {
   /// Gris de texto para elementos deshabilitados (#94A3B8)
   static const Color disabledText = Color(0xFF94A3B8);
 }
-

@@ -52,7 +52,9 @@ class AppPrimaryButton extends StatelessWidget {
                   height: 22,
                   child: CircularProgressIndicator(
                     strokeWidth: 2.2,
-                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.surfaceWhite),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      AppColors.surfaceWhite,
+                    ),
                   ),
                 )
               : Row(
@@ -60,13 +62,21 @@ class AppPrimaryButton extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     if (icon != null) ...[
-                      Icon(icon, size: 20, color: isEnabled ? AppColors.surfaceWhite : AppColors.disabledText),
+                      Icon(
+                        icon,
+                        size: 20,
+                        color: isEnabled
+                            ? AppColors.surfaceWhite
+                            : AppColors.disabledText,
+                      ),
                       const SizedBox(width: 8.0),
                     ],
                     Text(
                       text,
                       style: AppTypography.button.copyWith(
-                        color: isEnabled ? AppColors.surfaceWhite : AppColors.disabledText,
+                        color: isEnabled
+                            ? AppColors.surfaceWhite
+                            : AppColors.disabledText,
                       ),
                     ),
                   ],
@@ -124,7 +134,9 @@ class AppSecondaryButton extends StatelessWidget {
                   height: 20,
                   child: CircularProgressIndicator(
                     strokeWidth: 2.0,
-                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.neutralDark),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      AppColors.neutralDark,
+                    ),
                   ),
                 )
               : Row(

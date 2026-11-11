@@ -55,11 +55,17 @@ class CustomTextField extends StatelessWidget {
                     child: prefixIcon,
                   )
                 : null,
-            prefixIconConstraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+            prefixIconConstraints: const BoxConstraints(
+              minWidth: 44,
+              minHeight: 44,
+            ),
             suffixIcon: suffixIcon,
             filled: true,
             fillColor: AppColors.inputBackground,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 12,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(color: AppColors.inputBorder),
@@ -70,7 +76,10 @@ class CustomTextField extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.primary, width: 1.8),
+              borderSide: const BorderSide(
+                color: AppColors.primary,
+                width: 1.8,
+              ),
             ),
           ),
         ),
@@ -78,4 +87,3 @@ class CustomTextField extends StatelessWidget {
     );
   }
 }
-

@@ -42,13 +42,17 @@ class EmptyStateWidget extends StatelessWidget {
             Text(
               title,
               textAlign: TextAlign.center,
-              style: AppTypography.titleMedium.copyWith(color: AppColors.neutralDark),
+              style: AppTypography.titleMedium.copyWith(
+                color: AppColors.neutralDark,
+              ),
             ),
             const SizedBox(height: 8.0),
             Text(
               message,
               textAlign: TextAlign.center,
-              style: AppTypography.bodySmall.copyWith(color: AppColors.secondary),
+              style: AppTypography.bodySmall.copyWith(
+                color: AppColors.secondary,
+              ),
             ),
             if (actionLabel != null && onActionPressed != null) ...[
               const SizedBox(height: 20.0),
@@ -74,7 +78,8 @@ class OfflineStateWidget extends StatelessWidget {
   const OfflineStateWidget({
     super.key,
     required this.onRetry,
-    this.message = 'No pudimos conectar con los servidores de BusTrack. Verifica tu conexión a internet.',
+    this.message =
+        'No pudimos conectar con los servidores de BusTrack. Verifica tu conexión a internet.',
   });
 
   @override
@@ -93,19 +98,27 @@ class OfflineStateWidget extends StatelessWidget {
                 shape: BoxShape.circle,
                 border: Border.all(color: AppColors.inputBorder),
               ),
-              child: const Icon(Icons.wifi_off_rounded, size: 36, color: AppColors.offline),
+              child: const Icon(
+                Icons.wifi_off_rounded,
+                size: 36,
+                color: AppColors.offline,
+              ),
             ),
             const SizedBox(height: 16.0),
             Text(
               'Sin Conexión a Internet',
               textAlign: TextAlign.center,
-              style: AppTypography.titleMedium.copyWith(color: AppColors.neutralDark),
+              style: AppTypography.titleMedium.copyWith(
+                color: AppColors.neutralDark,
+              ),
             ),
             const SizedBox(height: 8.0),
             Text(
               message,
               textAlign: TextAlign.center,
-              style: AppTypography.bodySmall.copyWith(color: AppColors.secondary),
+              style: AppTypography.bodySmall.copyWith(
+                color: AppColors.secondary,
+              ),
             ),
             const SizedBox(height: 20.0),
             AppPrimaryButton(
@@ -135,11 +148,17 @@ class OfflineBannerWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.wifi_off_rounded, size: 16, color: AppColors.surfaceWhite),
+          const Icon(
+            Icons.wifi_off_rounded,
+            size: 16,
+            color: AppColors.surfaceWhite,
+          ),
           const SizedBox(width: 8.0),
           Text(
             'Modo sin conexión • Mostrando datos locales de rutas',
-            style: AppTypography.caption.copyWith(color: AppColors.surfaceWhite),
+            style: AppTypography.caption.copyWith(
+              color: AppColors.surfaceWhite,
+            ),
           ),
         ],
       ),
@@ -159,12 +178,17 @@ class AppFeedback {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         content: Row(
           children: [
-            const Icon(Icons.check_circle_outline_rounded, color: AppColors.surfaceWhite),
+            const Icon(
+              Icons.check_circle_outline_rounded,
+              color: AppColors.surfaceWhite,
+            ),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 message,
-                style: AppTypography.bodyMedium.copyWith(color: AppColors.surfaceWhite),
+                style: AppTypography.bodyMedium.copyWith(
+                  color: AppColors.surfaceWhite,
+                ),
               ),
             ),
           ],
@@ -181,12 +205,17 @@ class AppFeedback {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         content: Row(
           children: [
-            const Icon(Icons.error_outline_rounded, color: AppColors.surfaceWhite),
+            const Icon(
+              Icons.error_outline_rounded,
+              color: AppColors.surfaceWhite,
+            ),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 message,
-                style: AppTypography.bodyMedium.copyWith(color: AppColors.surfaceWhite),
+                style: AppTypography.bodyMedium.copyWith(
+                  color: AppColors.surfaceWhite,
+                ),
               ),
             ),
           ],

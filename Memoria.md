@@ -110,3 +110,10 @@ Flutter -> API central por HTTPS/REST. No acceso directo a Cosmos ni a ML/GenAI.
   - **Estado:** Corrección aplicada; pendiente de validación en el siguiente run del workflow.
   - **Riesgos:** Ninguno; versiones alineadas con Flutter stable actual.
   - **Relación con otros repos:** Ninguna.
+- **2026-11-11 (Formato Dart y Puerta SDD):**
+  - **Decisión:** Formatear 10 archivos Dart (`lib/`, `test/`) conforme a `dart format`, agregar `scripts/check_sdd.ps1`, bloques `## Aprobación`, `checklists/pr.md` e integrar la puerta SDD en `.github/workflows/ci-pr.yml` y `ci.yml`.
+  - **Motivo:** Desbloquear `dart format --output=none --set-exit-if-changed .`, `flutter analyze`, `flutter test --coverage` y la verificación SDD en GitHub Actions.
+  - **Archivos afectados:** `lib/core/{theme,widgets}/*.dart`, `lib/main.dart`, `test/widget_test.dart`, `scripts/check_sdd.ps1`, `specs/*/checklists/pr.md`, `specs*/**/spec.md`, `.github/workflows/{ci,ci-pr}.yml`, `Memoria.md`.
+  - **Estado:** `scripts/check_sdd.ps1` validado localmente; CI en ejecución en GitHub Actions.
+  - **Riesgos:** Ninguno.
+  - **Relación con otros repos:** Alineado con las puertas SDD de `bustrack-api`, `bustrack-landing`, `bustrack-genai` y `bustrack-ml`.

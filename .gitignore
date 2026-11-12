@@ -16,6 +16,9 @@
 .cxx
 local.properties
 keys.properties
+key.properties
+android/key.properties
+android/upload-keystore.jks
 # Firma — SIGNING_*/KEYSTORE_* solo CI, nunca en repo (constitución §6)
 *.jks
 *.keystore
@@ -35,6 +38,7 @@ keystore.properties
 # Dependencias de herramientas locales
 node_modules/
 # Flutter/Dart
+.flutter-plugins-dependencies
 .dart_tool/
 .packages
 .pub-cache/

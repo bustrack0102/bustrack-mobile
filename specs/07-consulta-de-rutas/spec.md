@@ -1,6 +1,6 @@
 # 07-consulta-de-rutas — Consulta de rutas
 
-> Repositorio: BusTrack Mobile · Estado: Pendiente · Fecha: 2026-10-30.
+> Repositorio: BusTrack Mobile · Estado: Parcial · Fecha: 2026-11-12.
 
 ## 1. Objetivo
 
@@ -8,7 +8,7 @@ Permitir buscar y consultar rutas por empresa y destino.
 
 ## 2. Contexto
 
-No implementado.
+Implementado en Flutter con datos de demostración claramente identificados: búsqueda por texto, filtro por modo, listado y detalle de ruta con paradas, tarifa y mapa. El filtro por empresa, los horarios y el consumo de `GET /api/v1/rutas` quedan pendientes. Evidencia en `docs/map-integration.md`.
 
 ## 3. Alcance
 

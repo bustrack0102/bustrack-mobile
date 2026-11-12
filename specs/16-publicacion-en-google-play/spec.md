@@ -1,6 +1,6 @@
 # 16-publicacion-en-google-play — Publicación en Google Play
 
-> Repositorio: BusTrack Mobile · Estado: Pendiente · Fecha: 2026-10-30.
+> Repositorio: BusTrack Mobile · Estado: Parcial · Fecha: 2026-11-12.
 
 ## 1. Objetivo
 
@@ -8,7 +8,7 @@ Preparar firma, política de privacidad, ficha y publicación de la app Flutter.
 
 ## 2. Contexto
 
-No hay app Flutter ni publicación. La app actual Kotlin no está publicada.
+La app Flutter existe y está configurada para firmar AAB con Upload Key mediante GitHub Actions. La keystore aún no se ha creado ni validado en un run real, y no hay publicación en Google Play. La ficha, capturas y política pública quedan pendientes; los requisitos están documentados en `docs/guia-prueba-interna-playstore.md` y `docs/android-release-signing.md`.
 
 ## 3. Alcance
 

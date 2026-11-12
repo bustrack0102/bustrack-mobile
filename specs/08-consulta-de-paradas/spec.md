@@ -1,6 +1,6 @@
 # 08-consulta-de-paradas — Consulta de paradas
 
-> Repositorio: BusTrack Mobile · Estado: Pendiente · Fecha: 2026-10-30.
+> Repositorio: BusTrack Mobile · Estado: Parcial · Fecha: 2026-11-12.
 
 ## 1. Objetivo
 
@@ -8,7 +8,7 @@ Mostrar las paradas ordenadas de una ruta.
 
 ## 2. Contexto
 
-No implementado.
+Implementado en Flutter con datos de demostración: listado ordenado de paradas, coordenadas válidas y referencia en el mapa del detalle de ruta. El detalle dedicado de parada y el consumo de `GET /api/v1/rutas/{id}/paradas` quedan pendientes. Evidencia en `docs/map-integration.md`.
 
 ## 3. Alcance
 

@@ -117,3 +117,24 @@ Flutter -> API central por HTTPS/REST. No acceso directo a Cosmos ni a ML/GenAI.
   - **Estado:** `scripts/check_sdd.ps1` validado localmente; CI en ejecución en GitHub Actions.
   - **Riesgos:** Ninguno.
   - **Relación con otros repos:** Alineado con las puertas SDD de `bustrack-api`, `bustrack-landing`, `bustrack-genai` y `bustrack-ml`.
+- **2026-11-12:** firma Release con Upload Key y automatización segura del AAB.
+  - **Decisión:** Configurar `signingConfigs.release` en `android/app/build.gradle.kts` leyendo `ANDROID_KEYSTORE_PATH`/`ANDROID_KEYSTORE_PASSWORD`/`ANDROID_KEY_ALIAS`/`ANDROID_KEY_PASSWORD` (CI) o `android/key.properties` (local), abortando la build Release si la firma está incompleta. Endurecer `.github/workflows/build-aab.yml` para decodificar la keystore desde `ANDROID_KEYSTORE_BASE64`, validar el alias, compilar, verificar `jarsigner` y comparar la huella SHA-256 con la upload key, publicar el artefacto solo si todo pasa y limpiar credenciales con `if: always()`. Añadir `docs/android-release-signing.md`.
+  - **Motivo:** Google Play rechaza AAB firmados en modo depuración; se requiere una Upload Key estable y no exponer credenciales.
+  - **Archivos afectados:** `android/app/build.gradle.kts`, `.github/workflows/build-aab.yml`, `.gitignore`, `docs/android-release-signing.md`, `Memoria.md`.
+  - **Estado:** Configuración implementada; pendiente de crear la keystore, registrar los cuatro GitHub Secrets y validar el AAB en un run real.
+  - **Riesgos:** La firma Release no puede verificarse hasta ejecutar el workflow con secretos reales; perder la Upload Key impide futuras actualizaciones si no se reinicia en Play Console.
+  - **Relación con otros repos:** Ninguna; la App Signing Key de distribución queda administrada por Google Play.
+- **2026-11-12:** pantallas principales y mapa interactivo con paridad funcional.
+  - **Decisión:** Implementar las pantallas 6 a 11 (Explorar rutas, Detalle de ruta, Viaje en curso, Historial, Perfil y Calificar/contribuir) con `flutter_map` + OpenStreetMap, `latlong2` y `geolocator` en primer plano. Crear la capa reutilizable `lib/core/map/`, los modelos y repositorios de rutas, el historial local, las contribuciones y el servicio de cuenta. Integrar `MainShellScreen` con `NavigationBar` de tres destinos y enrutar `lib/main.dart` a esa shell tras login o modo demo. Documentar en `docs/map-integration.md`.
+  - **Motivo:** Completar el flujo de navegación y orientación solicitado sin depender de una API Key de Google Maps y sin inventar datos de tiempo real.
+  - **Archivos afectados:** `pubspec.yaml`, `pubspec.lock`, `android/app/src/main/AndroidManifest.xml`, `lib/core/map/**`, `lib/core/widgets/{app_buttons,demo_data_badge}.dart`, `lib/features/{routes,history,feedback,profile,trip,home}/**`, `lib/main.dart`, `test/core/map/**`, `test/features/**`, `docs/map-integration.md`, `Memoria.md`.
+  - **Estado:** Implementado con datos de demostración claramente etiquetados. `flutter analyze` sin issues y `flutter test` con 26 pruebas aprobadas. No se pudo validar compilación Android ni ejecución en dispositivo por falta de JDK/Android SDK local.
+  - **Riesgos:** Los contratos `GET /api/v1/rutas` y `/rutas/{id}/paradas` aún no existen; el repositorio demo debe sustituirse. Historial y contribuciones viven solo en memoria. La ubicación y los tiles OSM requieren validación en dispositivo real.
+  - **Relación con otros repos:** Alineado con los contratos propuestos de la API central; no se accede a Cosmos DB ni se envía ubicación del usuario.
+- **2026-11-12:** sincronización de specs con el avance implementado y publicación en Git.
+  - **Decisión:** Marcar como parciales las specs 07 (rutas), 08 (paradas), 11 (mapa), 13 (calificaciones) y 16 (publicación), con evidencia por tarea y estado real; actualizar `specs/README.md`. Subir al repositorio los cambios acumulados de firma Android, mapa y pantallas.
+  - **Motivo:** Mantener trazabilidad SDD entre código, pruebas y documentación, y respaldar el avance en el remoto.
+  - **Archivos afectados:** `specs/07-consulta-de-rutas/{spec,task}.md`, `specs/08-consulta-de-paradas/{spec,task}.md`, `specs/11-mapa-de-consulta/{spec,task}.md`, `specs/13-calificaciones/{spec,task}.md`, `specs/16-publicacion-en-google-play/{spec,task}.md`, `specs/README.md`, `Memoria.md` y archivos de implementación pendientes de commit.
+  - **Estado:** Specs sincronizadas con estado parcial; `flutter analyze` sin issues y 26 pruebas aprobadas. Sin validación de build Android por falta de JDK/Android SDK local.
+  - **Riesgos:** Las tareas parciales no deben interpretarse como funcionalidad completa; faltan contratos HTTP reales, persistencia, keystore y validación en dispositivo.
+  - **Relación con otros repos:** Sin cambios en contratos públicos; pendiente alinear con la API central cuando existan los endpoints de rutas, paradas y calificaciones.

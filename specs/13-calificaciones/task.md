@@ -1,6 +1,6 @@
 # Tareas — 13-calificaciones — Calificaciones de servicio
 
-> Spec: `spec.md` · Plan: `plan.md` · Estado: Pendiente.
+> Spec: `spec.md` · Plan: `plan.md` · Estado: Parcial.
 > Marcar solo con evidencia. No marcar por documentar.
 
 ## Dependencias
@@ -10,12 +10,14 @@
 
 ## Actividades
 
-### [ ] T01. Definir formulario
+### [x] T01. Definir formulario
 
 - Rango.
 - Comentario.
 
-**Archivos:** lib/features/calificaciones/ (futuro), specs-endpoints/24-endpoint-calificaciones/
+**Archivos:** `lib/features/feedback/presentation/screens/rate_contribute_screen.dart`, `lib/features/feedback/domain/contribution_service.dart`, specs-endpoints/24-endpoint-calificaciones/
+
+**Evidencia:** formulario con calificación general, categorías, comentario, reporte de tarifa y reporte a la concesionaria; los datos se guardan solo en memoria local.
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
@@ -23,23 +25,27 @@
 
 - Agregados.
 
-**Archivos:** lib/features/calificaciones/ (futuro), specs-endpoints/24-endpoint-calificaciones/
+**Archivos:** `lib/features/feedback/domain/models/contribution.dart`, specs-endpoints/24-endpoint-calificaciones/
+
+**Evidencia:** modelo local definido; consulta de agregados y consumo HTTP pendientes.
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
-### [ ] T03. Definir pruebas
+### [-] T03. Definir pruebas
 
 - Auth.
 - Rango.
 - Duplicado.
 
-**Archivos:** lib/features/calificaciones/ (futuro), specs-endpoints/24-endpoint-calificaciones/
+**Archivos:** `test/features/feedback/contribution_service_test.dart`, `test/features/feedback/rate_contribute_screen_test.dart`, specs-endpoints/24-endpoint-calificaciones/
+
+**Evidencia:** validación de rango, almacenamiento local y ausencia de recompensas probados. Autenticación real, duplicados y sincronización pendientes.
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 
 ## Cierre
 
 - [ ] Todas las tareas con evidencia.
-- [ ] `Memoria.md` actualizado.
-- [ ] Pruebas y gates ejecutados.
-- [ ] Sin afirmaciones de implementación no verificadas.
+- [x] `Memoria.md` actualizado.
+- [x] Pruebas y gates ejecutados (`flutter analyze` y `flutter test`: 26 pruebas).
+- [x] Sin afirmaciones de implementación no verificadas.

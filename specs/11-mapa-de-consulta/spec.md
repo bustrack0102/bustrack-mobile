@@ -1,6 +1,6 @@
 # 11-mapa-de-consulta — Mapa de consulta
 
-> Repositorio: BusTrack Mobile · Estado: Pendiente · Fecha: 2026-10-30.
+> Repositorio: BusTrack Mobile · Estado: Parcial · Fecha: 2026-11-12.
 
 ## 1. Objetivo
 
@@ -8,7 +8,7 @@ Mostrar rutas, paradas y destinos registrados en un mapa de consulta.
 
 ## 2. Contexto
 
-No implementado. No se contempla rastreo GPS continuo.
+Implementado en Flutter con `flutter_map` y OpenStreetMap: mapa interactivo de solo consulta, marcadores de paradas, trazado de ruta y ubicación opcional del usuario en primer plano. No se contempla rastreo GPS continuo. Datos de rutas aún demo; evidencia en `docs/map-integration.md`.
 
 ## 3. Alcance
 

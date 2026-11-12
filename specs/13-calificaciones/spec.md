@@ -1,6 +1,6 @@
 # 13-calificaciones — Calificaciones de servicio
 
-> Repositorio: BusTrack Mobile · Estado: Pendiente · Fecha: 2026-10-30.
+> Repositorio: BusTrack Mobile · Estado: Parcial · Fecha: 2026-11-12.
 
 ## 1. Objetivo
 
@@ -8,7 +8,7 @@ Permitir calificar empresas/servicios y consultar agregados.
 
 ## 2. Contexto
 
-No implementado.
+Implementado en Flutter el formulario local de calificación, reporte de tarifa y reporte a la concesionaria, con validación de rango y aviso explícito de que las recompensas no están implementadas. La autenticación real, la consulta de agregados y el envío a la API quedan pendientes. Evidencia en `docs/map-integration.md`.
 
 ## 3. Alcance
 

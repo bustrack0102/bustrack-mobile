@@ -3,7 +3,7 @@ import 'core/theme/app_theme.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
 import 'features/auth/presentation/screens/otp_verification_screen.dart';
 import 'features/auth/presentation/screens/register_screen.dart';
-import 'features/home/presentation/screens/home_demo_screen.dart';
+import 'features/home/presentation/screens/main_shell_screen.dart';
 import 'features/splash/presentation/screens/splash_screen.dart';
 
 void main() {
@@ -39,7 +39,7 @@ enum AppScreenState {
   register,
   otpVerification,
   login,
-  homeDemo,
+  mainShell,
 }
 
 class _BusTrackNavigationCoordinatorState
@@ -69,7 +69,7 @@ class _BusTrackNavigationCoordinatorState
           },
           onDemoTap: () {
             _isDemoMode = true;
-            _navigateTo(AppScreenState.homeDemo);
+            _navigateTo(AppScreenState.mainShell);
           },
         );
 
@@ -95,7 +95,7 @@ class _BusTrackNavigationCoordinatorState
           onRegisterTap: () => _navigateTo(AppScreenState.register),
           onLoginSuccess: () {
             _isDemoMode = false;
-            _navigateTo(AppScreenState.homeDemo);
+            _navigateTo(AppScreenState.mainShell);
           },
           onForgotPasswordTap: () {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -108,12 +108,12 @@ class _BusTrackNavigationCoordinatorState
           },
           onDemoTap: () {
             _isDemoMode = true;
-            _navigateTo(AppScreenState.homeDemo);
+            _navigateTo(AppScreenState.mainShell);
           },
         );
 
-      case AppScreenState.homeDemo:
-        return HomeDemoScreen(
+      case AppScreenState.mainShell:
+        return MainShellScreen(
           isDemoMode: _isDemoMode,
           onLogout: () => _navigateTo(AppScreenState.login),
         );

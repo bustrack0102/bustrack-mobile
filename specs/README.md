@@ -15,16 +15,16 @@
 | `04-autenticacion` | Autenticación en la aplicación | Parcial |
 | `05-gestion-de-sesiones` | Gestión de sesiones | Parcial |
 | `06-consulta-de-empresas` | Consulta de empresas | Pendiente |
-| `07-consulta-de-rutas` | Consulta de rutas | Pendiente |
-| `08-consulta-de-paradas` | Consulta de paradas | Pendiente |
+| `07-consulta-de-rutas` | Consulta de rutas | Parcial |
+| `08-consulta-de-paradas` | Consulta de paradas | Parcial |
 | `09-consulta-de-destinos` | Consulta de destinos | Pendiente |
 | `10-consulta-de-horarios-y-tarifas` | Consulta de horarios y tarifas | Pendiente |
-| `11-mapa-de-consulta` | Mapa de consulta | Pendiente |
+| `11-mapa-de-consulta` | Mapa de consulta | Parcial |
 | `12-comparacion-de-alternativas` | Comparación de alternativas | Pendiente |
-| `13-calificaciones` | Calificaciones de servicio | Pendiente |
+| `13-calificaciones` | Calificaciones de servicio | Parcial |
 | `14-captura-de-acelerometro-con-consentimiento` | Captura de acelerómetro con consentimiento | Pendiente |
 | `15-integracion-con-servicio-ml` | Integración con el servicio ML | Pendiente |
-| `16-publicacion-en-google-play` | Publicación en Google Play | Pendiente |
+| `16-publicacion-en-google-play` | Publicación en Google Play | Parcial |
 
 ## Reglas
 

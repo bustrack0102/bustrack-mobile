@@ -71,12 +71,16 @@ class AppPrimaryButton extends StatelessWidget {
                       ),
                       const SizedBox(width: 8.0),
                     ],
-                    Text(
-                      text,
-                      style: AppTypography.button.copyWith(
-                        color: isEnabled
-                            ? AppColors.surfaceWhite
-                            : AppColors.disabledText,
+                    Flexible(
+                      child: Text(
+                        text,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTypography.button.copyWith(
+                          color: isEnabled
+                              ? AppColors.surfaceWhite
+                              : AppColors.disabledText,
+                        ),
                       ),
                     ),
                   ],
@@ -147,10 +151,14 @@ class AppSecondaryButton extends StatelessWidget {
                       Icon(icon, size: 20, color: AppColors.neutralDark),
                       const SizedBox(width: 8.0),
                     ],
-                    Text(
-                      text,
-                      style: AppTypography.button.copyWith(
-                        color: AppColors.neutralDark,
+                    Flexible(
+                      child: Text(
+                        text,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTypography.button.copyWith(
+                          color: AppColors.neutralDark,
+                        ),
                       ),
                     ),
                   ],

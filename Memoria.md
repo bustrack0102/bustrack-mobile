@@ -152,3 +152,10 @@ Flutter -> API central por HTTPS/REST. No acceso directo a Cosmos ni a ML/GenAI.
   - **Estado:** Logotipo integrado en Android y Flutter. `flutter analyze` reporta 0 issues y `flutter test` aprueba las 26 pruebas.
   - **Riesgos:** Ninguno.
   - **Relación con otros repos:** Mantiene coherencia con la identidad visual corporativa de BusTrack.
+- **2026-11-12:** endurecimiento de DevSecOps, seguridad Android y validación de CI/CD.
+  - **Decisión:** Habilitar `android:allowBackup="false"` y `android:networkSecurityConfig` con bloqueo estricto de cleartext traffic (`cleartextTrafficPermitted="false"`) en `android/app/src/main/res/xml/network_security_config.xml`. Activar ofuscación (`isMinifyEnabled = true`, `isShrinkResources = true`) con `android/app/proguard-rules.pro` en build Release. Expandir reglas Semgrep SAST en `.semgrep/rules/semgrep.yaml` para detectar `android:debuggable` y reforzar MASVS-STORAGE y MASVS-NET. Verificar puertas de calidad en `ci.yml` (Flutter analyze, format, test con cobertura, check_sdd y Semgrep) y `build-aab.yml` (firma y comprobación de package `com.bustrackapp`).
+  - **Motivo:** Asegurar el cumplimiento estricto de DevSecOps y OWASP MASVS L2 para la publicación en Google Play Store y protección de la aplicación.
+  - **Archivos afectados:** `android/app/src/main/AndroidManifest.xml`, `android/app/src/main/res/xml/network_security_config.xml`, `android/app/build.gradle.kts`, `android/app/proguard-rules.pro`, `.semgrep/rules/semgrep.yaml`, `Memoria.md`.
+  - **Estado:** Endurecimiento aplicado y validado. `flutter analyze` reporta 0 issues, `flutter test` aprueba las 26 pruebas y `check_sdd.ps1` pasa con SDD-OK.
+  - **Riesgos:** Ninguno; las reglas ProGuard conservan los entrypoints de Flutter y plugins.
+  - **Relación con otros repos:** Alineado con la política de seguridad estricta de BusTrack.

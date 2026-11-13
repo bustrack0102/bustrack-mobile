@@ -2,7 +2,7 @@ rules:
   - id: bustrack-dart-no-hardcoded-secret
     languages: [dart]
     severity: ERROR
-    message: No hardcodear secretos en la app.
+    message: No hardcodear secretos ni credenciales en la app (OWASP MASVS-STORAGE-1).
     patterns:
       - pattern: |
           const $X = "...";
@@ -12,14 +12,22 @@ rules:
   - id: bustrack-dart-insecure-http
     languages: [dart]
     severity: ERROR
-    message: Usar HTTPS; no HTTP en produccion.
+    message: Usar HTTPS; no HTTP en produccion (OWASP MASVS-NET-1).
     pattern-regex: "http://(?!localhost|127\\.0\\.0\\.1)[^\"']+"
   - id: bustrack-dart-print-sensitive
     languages: [dart]
     severity: WARNING
-    message: No imprimir tokens ni credenciales.
+    message: No imprimir tokens ni credenciales en consola (OWASP MASVS-STORAGE-2).
     patterns:
       - pattern: print($X);
       - metavariable-regex:
           metavariable: $X
           regex: (?i).*(token|password|secret).*
+  - id: bustrack-android-no-debuggable
+    languages: [generic]
+    severity: ERROR
+    message: No habilitar android:debuggable en producción.
+    paths:
+      include:
+        - "android/app/src/main/AndroidManifest.xml"
+    pattern: 'android:debuggable="true"'

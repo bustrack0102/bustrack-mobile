@@ -87,6 +87,12 @@ android {
                 signingConfig = signingConfigs.getByName("release")
             }
             // Si no hay firma configurada, la validación anterior aborta la build Release.
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 }

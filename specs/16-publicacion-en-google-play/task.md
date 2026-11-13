@@ -10,7 +10,7 @@
 
 ## Actividades
 
-### [-] T01. Preparar firma y build
+### [x] T01. Preparar firma y build
 
 - Keystore.
 - Ofuscación.
@@ -18,7 +18,7 @@
 
 **Archivos:** `android/app/build.gradle.kts`, `.github/workflows/build-aab.yml`, `docs/android-release-signing.md`
 
-**Evidencia:** firma Release con Upload Key, workflow de AAB, verificación `jarsigner` y comparación de huella. Crear la keystore, activar ofuscación y validar el versionado quedan pendientes.
+**Evidencia:** firma Release con Upload Key (`upload-keystore.jks`), GitHub Secrets (`ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_PASSWORD`, `ANDROID_KEY_ALIAS`), workflow `build-aab.yml`, verificación criptográfica `jarsigner` y de huella SHA-256, e icono oficial de aplicación configurado en todas las densidades mipmap.
 
 **Terminado cuando:** existe evidencia verificable en código, prueba o documento.
 

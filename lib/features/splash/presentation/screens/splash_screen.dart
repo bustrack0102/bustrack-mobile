@@ -48,10 +48,10 @@ class SplashScreen extends StatelessWidget {
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Logotipo oficial
+                  // Logotipo oficial BusTrack
                   Container(
-                    width: 104,
-                    height: 104,
+                    width: 130,
+                    height: 130,
                     decoration: BoxDecoration(
                       color: AppColors.surfaceWhite,
                       borderRadius: BorderRadius.circular(28),
@@ -64,18 +64,22 @@ class SplashScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: Center(
-                      child: Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          color: AppColors.primary,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: const Icon(
-                          Icons.directions_bus_filled_rounded,
-                          size: 46,
-                          color: AppColors.surfaceWhite,
+                    padding: const EdgeInsets.all(12),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(18),
+                      child: Image.asset(
+                        'assets/images/logo.png',
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) => Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.primary,
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          child: const Icon(
+                            Icons.directions_bus_filled_rounded,
+                            size: 46,
+                            color: AppColors.surfaceWhite,
+                          ),
                         ),
                       ),
                     ),

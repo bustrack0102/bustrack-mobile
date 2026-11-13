@@ -145,3 +145,10 @@ Flutter -> API central por HTTPS/REST. No acceso directo a Cosmos ni a ML/GenAI.
   - **Estado:** Identificador actualizado de manera consistente en todo el proyecto. `flutter analyze` reporta 0 issues y `flutter test` aprueba las 26 pruebas. La configuración de firma Release (`signingConfigs.release`), los 4 secretos de GitHub y el alias `upload` permanecen completamente intactos.
   - **Riesgos:** Ninguno. El identificador ahora coincide exactamente con el registrado en Google Play Console.
   - **Relación con otros repos:** Alineado con la ficha de la aplicación registrada en Google Play Console para BusTrack (`com.bustrackapp`).
+- **2026-11-12:** integración de logotipo oficial en assets Flutter y launcher icons Android.
+  - **Decisión:** Incorporar el logotipo oficial proporcionado por el usuario en `assets/images/logo.png` (512x512) y generar los iconos de launcher nativos en `android/app/src/main/res/mipmap-{mdpi,hdpi,xhdpi,xxhdpi,xxxhdpi}/ic_launcher.png` respetando proporciones y fondo blanco. Actualizar `pubspec.yaml` para declarar la carpeta de assets, y renderizar el logotipo en `SplashScreen`, `LoginScreen` y `RegisterScreen` con fallback resiliente. Actualizar `specs/16-publicacion-en-google-play/{spec,task}.md` marcando T01 como realizada con evidencia de firma e icono.
+  - **Motivo:** Cumplir con la identidad visual oficial de BusTrack y los requerimientos de icono de aplicación para la publicación en Google Play Store y UI de inicio.
+  - **Archivos afectados:** `assets/images/logo.png`, `android/app/src/main/res/mipmap-*/ic_launcher.png`, `pubspec.yaml`, `pubspec.lock`, `lib/features/splash/presentation/screens/splash_screen.dart`, `lib/features/auth/presentation/screens/{login_screen,register_screen}.dart`, `specs/16-publicacion-en-google-play/{spec,task}.md`, `Memoria.md`.
+  - **Estado:** Logotipo integrado en Android y Flutter. `flutter analyze` reporta 0 issues y `flutter test` aprueba las 26 pruebas.
+  - **Riesgos:** Ninguno.
+  - **Relación con otros repos:** Mantiene coherencia con la identidad visual corporativa de BusTrack.

@@ -8,7 +8,7 @@ Preparar firma, política de privacidad, ficha y publicación de la app Flutter.
 
 ## 2. Contexto
 
-La app Flutter existe y está configurada para firmar AAB con Upload Key mediante GitHub Actions. La keystore aún no se ha creado ni validado en un run real, y no hay publicación en Google Play. La ficha, capturas y política pública quedan pendientes; los requisitos están documentados en `docs/guia-prueba-interna-playstore.md` y `docs/android-release-signing.md`.
+La app Flutter cuenta con la configuración de firma Release para AAB con Upload Key mediante GitHub Actions, secrets registrados y validación SHA-256. El paquete oficial es `com.bustrackapp` y el icono de la aplicación está integrado en Android (`mipmap`) y Flutter (`assets/images/logo.png`). La ficha, capturas y política pública quedan documentadas en `docs/guia-prueba-interna-playstore.md`, `docs/configuracion-global-diseno-seguridad-playstore.md` y `docs/android-release-signing.md`.
 
 ## 3. Alcance
 

@@ -89,16 +89,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Row(
                       children: [
                         Container(
-                          width: 34,
-                          height: 34,
+                          width: 38,
+                          height: 38,
                           decoration: BoxDecoration(
-                            color: AppColors.primary,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: const Icon(
-                            Icons.directions_bus_filled_rounded,
                             color: AppColors.surfaceWhite,
-                            size: 18,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: AppColors.primary, width: 1.5),
+                          ),
+                          padding: const EdgeInsets.all(2),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.asset(
+                              'assets/images/logo.png',
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) => Container(
+                                color: AppColors.primary,
+                                child: const Icon(
+                                  Icons.directions_bus_filled_rounded,
+                                  color: AppColors.surfaceWhite,
+                                  size: 18,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                         const SizedBox(width: 8),

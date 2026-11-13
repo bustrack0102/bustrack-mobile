@@ -1,7 +1,7 @@
 # Firma Release de Android y generación automatizada del AAB
 
 > Documento operativo. No contiene contraseñas, keystores ni credenciales.
-> Aplica a BusTrack Mobile (`com.bustrack.mobile`) sobre Flutter + Android Gradle.
+> Aplica a BusTrack Mobile (`com.bustrackapp`) sobre Flutter + Android Gradle.
 
 ## 1. Estado actual del proyecto
 
@@ -14,7 +14,7 @@
 | Android Gradle Plugin | 9.1.1 |
 | Kotlin | 2.4.0 |
 | DSL Gradle | Kotlin (`build.gradle.kts`) |
-| `applicationId` / `namespace` | `com.bustrack.mobile` |
+| `applicationId` / `namespace` | `com.bustrackapp` |
 | Ruta del proyecto Flutter | raíz del repositorio (`pubspec.yaml`) |
 | Proyecto Android | `android/` |
 | Salida del AAB | `build/app/outputs/bundle/release/app-release.aab` |
@@ -185,7 +185,7 @@ Nunca intentes subir un AAB firmado con otra clave sin completar el reinicio en 
 
 ## 12. Compatibilidad con Google Play
 
-- `applicationId`: `com.bustrack.mobile` (estable, no cambiar).
+- `applicationId`: `com.bustrackapp` (estable, no cambiar).
 - `versionCode` y `versionName` provienen de `pubspec.yaml` (`version: 1.0.0+1`).
   Incrementa `versionCode` en cada envío sin reiniciar la numeración.
 - `minSdk`/`targetSdk` provienen de los valores de Flutter. `targetSdk` debe cumplir el

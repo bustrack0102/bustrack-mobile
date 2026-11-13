@@ -20,7 +20,7 @@ class MapConfig {
   static const String attributionText = 'OpenStreetMap contributors';
 
   /// Identifica la app ante el servicio de tiles de OpenStreetMap.
-  static const String userAgentPackageName = 'com.bustrack.mobile';
+  static const String userAgentPackageName = 'com.bustrackapp';
 
   static const double minZoom = 3.0;
   static const double maxZoom = 18.0;

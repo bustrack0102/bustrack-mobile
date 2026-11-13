@@ -1,7 +1,7 @@
 # BusTrack Mobile — Guía Paso a Paso para Publicar en Prueba Interna (Google Play Console)
 
 > **Tipo de Versión:** Prueba Interna (Internal Testing Track)  
-> **Paquete:** `com.bustrack.mobile`  
+> **Paquete:** `com.bustrackapp`  
 > **Formato de Entrega:** Android App Bundle (`.aab`)  
 > **Audiencia:** Testers internos y equipo de desarrollo (hasta 100 probadores sin revisión prolongada de Google).
 

@@ -14,7 +14,7 @@ Se usa `flutter_map` con tiles de OpenStreetMap (OSM) porque:
 Configuración central en `lib/core/map/map_config.dart`:
 
 - URL de tiles: `https://tile.openstreetmap.org/{z}/{x}/{y}.png`.
-- `userAgentPackageName = com.bustrack.mobile`.
+- `userAgentPackageName = com.bustrackapp`.
 - Atribución OSM obligatoria (el widget la muestra por defecto).
 - Centro y zoom iniciales de Monterrey.
 - `demoNotice`: texto reutilizable que aclara que los datos mostrados son de demostración.

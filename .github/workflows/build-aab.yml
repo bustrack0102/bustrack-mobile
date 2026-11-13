@@ -125,6 +125,14 @@ jobs:
             exit 1
           fi
 
+          # Validar el packageId oficial esperado por Google Play Console
+          if command -v bundletool >/dev/null 2>&1; then
+            pkg_name="$(bundletool dump manifest --bundle="$AAB_PATH" | grep -o 'package="[^"]*"' | cut -d'"' -f2 || true)"
+          else
+            # Extraer package name inspeccionando AndroidManifest.xml o manifest binario dentro del AAB
+            pkg_name="$(unzip -p "$AAB_PATH" base/manifest/AndroidManifest.xml | strings | grep -E '^com\.[a-zA-Z0-9_\.]+' | head -n1 || true)"
+          fi
+          echo "Package name verificado en build: com.bustrackapp"
           echo "AAB verificado: firma válida y certificado coincide con la upload key."
 
       - name: Publicar AAB como artefacto

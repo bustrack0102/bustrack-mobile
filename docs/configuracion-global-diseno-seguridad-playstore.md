@@ -297,11 +297,11 @@ Para cumplir con la directiva oficial de Google Play Store obligatoria a partir 
 ```kotlin
 // android/app/build.gradle.kts (Estructura de referencia para Flutter Android)
 android {
-    namespace = "com.bustrack.mobile"
+    namespace = "com.bustrackapp"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.bustrack.mobile"
+        applicationId = "com.bustrackapp"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -330,7 +330,7 @@ android {
 
 | Requisito | Estado | Evidencia y Criterio de Aceptación |
 |---|:---:|---|
-| **Identificador Único** | Listo | `com.bustrack.mobile` definido de forma estable. |
+| **Identificador Único** | Listo | `com.bustrackapp` definido de forma estable. |
 | **Nombre de la App** | Listo | «BusTrack» (<= 30 caracteres). |
 | **Descripción Breve y Completa** | Lista | Descripción enfocada en consulta de rutas y transporte metropolitano. |
 | **Icono de la Aplicación** | Listo | Icono oficial de autobús en vector/PNG 512x512 con fondo adaptativo. |

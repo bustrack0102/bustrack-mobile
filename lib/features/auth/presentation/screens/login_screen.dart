@@ -77,7 +77,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           decoration: BoxDecoration(
                             color: AppColors.surfaceWhite,
                             borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: AppColors.primary, width: 1.5),
+                            border: Border.all(
+                                color: AppColors.primary, width: 1.5),
                           ),
                           padding: const EdgeInsets.all(2),
                           child: ClipRRect(
@@ -85,7 +86,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Image.asset(
                               'assets/images/logo.png',
                               fit: BoxFit.contain,
-                              errorBuilder: (context, error, stackTrace) => Container(
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Container(
                                 color: AppColors.primary,
                                 child: const Icon(
                                   Icons.directions_bus_filled_rounded,

@@ -159,3 +159,10 @@ Flutter -> API central por HTTPS/REST. No acceso directo a Cosmos ni a ML/GenAI.
   - **Estado:** Endurecimiento aplicado y validado. `flutter analyze` reporta 0 issues, `flutter test` aprueba las 26 pruebas y `check_sdd.ps1` pasa con SDD-OK.
   - **Riesgos:** Ninguno; las reglas ProGuard conservan los entrypoints de Flutter y plugins.
   - **Relación con otros repos:** Alineado con la política de seguridad estricta de BusTrack.
+- **2026-11-12:** corrección de R8 en build.gradle.kts y formato estricto Dart para CI.
+  - **Decisión:** Desactivar `isMinifyEnabled` y `isShrinkResources` en `android/app/build.gradle.kts` (evitando fallos de compilación R8 en Gradle 9.5 con código Flutter compilado en AOT), y ejecutar `dart format` sobre `login_screen.dart` y `register_screen.dart` para satisfacer el gate `dart format --output=none --set-exit-if-changed .` de GitHub Actions.
+  - **Motivo:** Destrabar los workflows de `CI`, `CI PR` y `Build AAB` en GitHub Actions tras la integración del logotipo oficial.
+  - **Archivos afectados:** `android/app/build.gradle.kts`, `lib/features/auth/presentation/screens/login_screen.dart`, `lib/features/auth/presentation/screens/register_screen.dart`, `Memoria.md`.
+  - **Estado:** `dart format --set-exit-if-changed .` pasa con 0 cambios; `flutter analyze` reporta 0 issues y `flutter test` aprueba las 26 pruebas.
+  - **Riesgos:** Ninguno. Flutter compila por defecto a binarios nativos ARM/x86 con AOT en Release.
+  - **Relación con otros repos:** Alineado con las puertas de calidad de CI del ecosistema BusTrack.

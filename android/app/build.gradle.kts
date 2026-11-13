@@ -87,12 +87,10 @@ android {
                 signingConfig = signingConfigs.getByName("release")
             }
             // Si no hay firma configurada, la validación anterior aborta la build Release.
-            isMinifyEnabled = true
-            isShrinkResources = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            // Flutter compila con AOT nativo a código máquina en release.
+            // Para R8 en Flutter sin plugins nativos complejos:
+            isMinifyEnabled = false
+            isShrinkResources = false
         }
     }
 }

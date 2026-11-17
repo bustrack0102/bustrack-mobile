@@ -15,6 +15,8 @@ import '../../../../core/widgets/demo_data_badge.dart';
 import '../../../feedback/presentation/screens/rate_contribute_screen.dart';
 import '../../../history/domain/journey_history_service.dart';
 import '../../../trip/presentation/screens/trip_in_progress_screen.dart';
+import '../../data/azure_catalog_remote_data_source.dart';
+import '../../data/models/api_models.dart';
 import '../../domain/models/route_stop.dart';
 import '../../domain/models/transport_route.dart';
 
@@ -37,11 +39,52 @@ class RouteDetailScreen extends StatefulWidget {
 
 class _RouteDetailScreenState extends State<RouteDetailScreen> {
   final MapControllerService _mapController = MapControllerService();
+  final AzureCatalogRemoteDataSource _catalog = AzureCatalogRemoteDataSource();
+
+  String? _paradaSubidaId;
+  String? _paradaBajadaId;
+  TarifaCalculoModel? _tarifa;
+  bool _calculandoTarifa = false;
+  String? _tarifaError;
 
   @override
   void dispose() {
     _mapController.dispose();
     super.dispose();
+  }
+
+  Future<void> _calcularTarifa() async {
+    final subida = _paradaSubidaId;
+    final bajada = _paradaBajadaId;
+    if (subida == null || bajada == null) return;
+
+    setState(() {
+      _calculandoTarifa = true;
+      _tarifaError = null;
+      _tarifa = null;
+    });
+
+    try {
+      final resultado = await _catalog.calcularTarifa(
+        rutaId: widget.route.id,
+        paradaSubidaId: subida,
+        paradaBajadaId: bajada,
+      );
+      if (!mounted) return;
+      setState(() {
+        _tarifa = resultado;
+        _calculandoTarifa = false;
+        if (resultado == null) {
+          _tarifaError = 'La API no devolvió un cálculo para este tramo.';
+        }
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _calculandoTarifa = false;
+        _tarifaError = 'No se pudo calcular la tarifa. Revisa tu conexión.';
+      });
+    }
   }
 
   List<AppMapMarker> _buildMarkers() {
@@ -194,6 +237,140 @@ class _RouteDetailScreenState extends State<RouteDetailScreen> {
           historyService: widget.historyService,
           locationService: widget.locationService,
         ),
+      ),
+    );
+  }
+
+  Widget _buildTarifaCalculator(TransportRoute route) {
+    final stops = route.orderedStops;
+    // Las rutas demo no existen en la API: el cálculo en línea no aplica.
+    if (route.isDemo || stops.length < 2) {
+      return const SizedBox.shrink();
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppColors.inputBackground,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.inputBorder),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            children: [
+              Icon(
+                Icons.calculate_outlined,
+                size: 18,
+                color: AppColors.secondary,
+              ),
+              SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  'Calcular tarifa del tramo',
+                  style: AppTypography.bodyMedium,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: DropdownButtonFormField<String>(
+                  initialValue: _paradaSubidaId,
+                  decoration: const InputDecoration(
+                    labelText: 'Subida',
+                    isDense: true,
+                  ),
+                  items: [
+                    for (final stop in stops)
+                      DropdownMenuItem<String>(
+                        value: stop.id,
+                        child: Text(
+                          stop.name,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                  ],
+                  onChanged: (value) => setState(() {
+                    _paradaSubidaId = value;
+                    _tarifa = null;
+                    _tarifaError = null;
+                  }),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: DropdownButtonFormField<String>(
+                  initialValue: _paradaBajadaId,
+                  decoration: const InputDecoration(
+                    labelText: 'Bajada',
+                    isDense: true,
+                  ),
+                  items: [
+                    for (final stop in stops)
+                      DropdownMenuItem<String>(
+                        value: stop.id,
+                        child: Text(
+                          stop.name,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                  ],
+                  onChanged: (value) => setState(() {
+                    _paradaBajadaId = value;
+                    _tarifa = null;
+                    _tarifaError = null;
+                  }),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: _calculandoTarifa ||
+                      _paradaSubidaId == null ||
+                      _paradaBajadaId == null ||
+                      _paradaSubidaId == _paradaBajadaId
+                  ? null
+                  : _calcularTarifa,
+              icon: _calculandoTarifa
+                  ? const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.payments_outlined, size: 18),
+              label: const Text('Calcular tarifa'),
+            ),
+          ),
+          if (_tarifa != null) ...[
+            const SizedBox(height: 10),
+            Text(
+              '\$${_tarifa!.montoMxn.toStringAsFixed(2)} MXN',
+              style: AppTypography.titleLarge.copyWith(
+                color: AppColors.primary,
+              ),
+            ),
+            Text(
+              _tarifa!.leyenda,
+              style: AppTypography.bodySmall.copyWith(fontSize: 11),
+            ),
+          ],
+          if (_tarifaError != null) ...[
+            const SizedBox(height: 8),
+            Text(
+              _tarifaError!,
+              style: AppTypography.bodySmall.copyWith(
+                color: AppColors.offline,
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }
@@ -351,6 +528,8 @@ class _RouteDetailScreenState extends State<RouteDetailScreen> {
                           text: MapConfig.demoNotice,
                         ),
                       ],
+                      const SizedBox(height: 18),
+                      _buildTarifaCalculator(route),
                       const SizedBox(height: 18),
                       Row(
                         children: [

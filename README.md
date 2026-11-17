@@ -1,93 +1,118 @@
-# BusTrack Mobile — BusTrack
+# BusTrack Mobile — Sistema de Consulta y Planificación de Transporte Público
 
-> Sistema de consulta y planificación de transporte público — Universidad Tecnológica de Tula-Tepeji.
-> SDD + DevSecOps. Este README describe el **estado real** y la **arquitectura objetivo**.
+> Aplicación móvil Flutter conectada al Backend oficial desplegado en Microsoft Azure Container Apps.
+> **Universidad Tecnológica de Tula-Tepeji — Desarrollo e Integración Móvil.**
 
-## Estado actual
+---
 
-- **Tecnología real:** Kotlin + Jetpack Compose, Koin, Retrofit/OkHttp, kotlinx.serialization, EncryptedSharedPreferences, Kover, Detekt, Ktlint.
-- **Tecnología objetivo:** Flutter + Dart, arquitectura feature-first; gestor de estado y DI pendientes de autorización.
-- **Implementado:** ver lista en `Memoria.md`.
-- **No implementado:** ver pendientes en `Memoria.md`.
-- **Recursos Azure:** no desplegados; propuesta en `azure/`.
+## 🚀 Estado de la Integración con Azure Backend
 
-## Qué hace este repositorio
+- **Backend en Producción (Azure):** `https://bustrack-api.wonderfulpebble-cdcb3396.northcentralus.azurecontainerapps.io`
+- **Estado del Servidor:** **ONLINE (`GET /api/v1/health` -> HTTP 200 OK `"Healthy"`)**
+- **Autenticación:** JWT con Access Token de vida corta y Refresh Token seguro.
+- **Persistencia Segura:** `flutter_secure_storage` (`EncryptedSharedPreferences` / `Keychain`).
 
-Flutter -> API central por HTTPS/REST. No acceso directo a Cosmos ni a ML/GenAI.
+---
 
-## Estructura
+## ✅ Funcionalidades Realizadas (Etapa 1 y Etapa 2)
 
-```text
-lib/{core,features,domain,data,presentation}; test/, integration_test/ (estructura objetivo Flutter). Estructura real actual: app/src/main/java/com/example/movilsdd (Kotlin).
-```
+### 1. Infraestructura de Red y Almacenamiento Seguro (Etapa 1)
+- **`ApiConfig`:** Centralización de la URL base de Azure y catálogo completo de rutas REST `/api/v1/`.
+- **`ApiClient` (Dio):** Cliente HTTP con tiempos de espera configurados, interceptor de registro y manejo de errores estructurados (`ApiException`, `BadRequestException`, `UnauthorizedException`, `ConflictException`, `ServerException`).
+- **`SecureStorageService`:** Almacenamiento encriptado de `accessToken`, `refreshToken` y perfil del usuario en el dispositivo.
+- **`AuthInterceptor`:** Interceptor automático que inyecta `Authorization: Bearer {token}` en las peticiones y ejecuta renovación silenciosa de token (`POST /api/v1/auth/refresh`) si el servidor devuelve `401 Unauthorized`.
 
-## Gobernanza SDD
+### 2. Módulo de Autenticación y Perfil de Usuario (Etapa 1)
+- **Inicio de Sesión (`POST /api/v1/auth/login`):** Validación de credenciales contra la API real de Azure y guardado seguro de tokens JWT.
+- **Registro de Usuarios (`POST /api/v1/auth/registro`):** Alta de cuenta con nombre completo, correo, contraseña, confirmación y aviso de privacidad.
+- **Consulta de Perfil (`GET /api/v1/usuarios/me`):** Carga dinámica de datos del usuario autenticado en la pantalla de Perfil.
+- **Cierre de Sesión (`POST /api/v1/auth/logout`):** Revocación de sesión en Azure y limpieza del almacenamiento seguro.
+- **Persistencia de Sesión al Arrancar:** La app verifica si existe una sesión activa y redirige directamente a la pantalla principal sin solicitar credenciales nuevamente.
 
-| Documento | Propósito |
-|---|---|
-| `constitution.md` | Principios inalterables del repositorio. |
-| `AGENTS.md` | Instrucciones para agentes de IA. |
-| `Memoria.md` | Estado real, decisiones y deuda técnica. |
-| `CHECKLIST_PR.md` | Controles obligatorios de PR. |
-| `specs/` | Specs canónicas (`spec.md`, `plan.md`, `task.md`, `chart.md`). |
-| `docs/contratos-integracion.md` | Contratos con los demás repositorios. |
-| `.opencode/` | Agentes y skills específicos. |
-| `.semgrep/` | Reglas SAST reales. |
-| `.github/workflows/` | CI por stack. |
+### 3. Consulta de Catálogos de Información (Etapa 2)
+- **Directorio de Empresas (`GET /api/v1/empresas`):** Consulta del catálogo oficial de empresas y líneas de transporte con filtros por búsqueda y municipio.
+- **Medios de Transporte (`GET /api/v1/medios-transporte`):** Modalidades de transporte registradas (Autobús, Combi/Urvan, Taxi colectivo, etc.).
+- **Catálogo y Buscador de Rutas (`GET /api/v1/rutas` y `GET /api/v1/rutas/buscar`):** Búsqueda de alternativas entre origen y destino.
+- **Autocompletado de Paradas (`GET /api/v1/paradas/autocompletar`):** Sugerencias dinámicas mientras el usuario escribe su origen o destino.
+- **Secuencia de Paradas (`GET /api/v1/rutas/{id}/paradas`):** Línea de tiempo ordenada de paradas por ruta.
+- **Geometría Cartográfica GeoJSON (`GET /api/v1/rutas/{id}/geometria`):** Trazo de rutas en el mapa interactivo `flutter_map` (OpenStreetMap).
+- **Calculadora de Tarifas (`GET /api/v1/tarifas/calcular`):** Cálculo del costo estimado en pesos mexicanos (MXN) entre paradas de abordaje y descenso.
+- **Destinos Turísticos (`GET /api/v1/destinos`):** Atractivos y puntos de interés de la región.
 
-## Specs por tarea
+---
 
-- `specs/01-configuracion-inicial-del-proyecto/` — Configuración inicial del proyecto (Parcial).
-- `specs/02-arquitectura-base-flutter/` — Arquitectura base Flutter (Pendiente).
-- `specs/03-migracion-de-kotlin-a-flutter/` — Migración de Kotlin/Compose a Flutter (Pendiente).
-- `specs/04-autenticacion/` — Autenticación en la aplicación (Parcial).
-- `specs/05-gestion-de-sesiones/` — Gestión de sesiones (Parcial).
-- `specs/06-consulta-de-empresas/` — Consulta de empresas (Pendiente).
-- `specs/07-consulta-de-rutas/` — Consulta de rutas (Pendiente).
-- `specs/08-consulta-de-paradas/` — Consulta de paradas (Pendiente).
-- `specs/09-consulta-de-destinos/` — Consulta de destinos (Pendiente).
-- `specs/10-consulta-de-horarios-y-tarifas/` — Consulta de horarios y tarifas (Pendiente).
-- `specs/11-mapa-de-consulta/` — Mapa de consulta (Pendiente).
-- `specs/12-comparacion-de-alternativas/` — Comparación de alternativas (Pendiente).
-- `specs/13-calificaciones/` — Calificaciones de servicio (Pendiente).
-- `specs/14-captura-de-acelerometro-con-consentimiento/` — Captura de acelerómetro con consentimiento (Pendiente).
-- `specs/15-integracion-con-servicio-ml/` — Integración con el servicio ML (Pendiente).
-- `specs/16-publicacion-en-google-play/` — Publicación en Google Play (Pendiente).
+## 🛠️ Stack Tecnológico
 
-## Specs de endpoints
+- **Framework:** Flutter 3.x / Dart.
+- **Cliente HTTP:** Dio 5.7.0.
+- **Seguridad y Persistencia:** Flutter Secure Storage 9.2.2.
+- **Mapas:** `flutter_map` 8.3.2 + `latlong2` 0.10.1 (OpenStreetMap).
+- **Backend:** ASP.NET Core 9 Web API desplegado en Azure Container Apps.
 
-- `specs-endpoints/17-endpoint-login/` — `POST /api/v1/auth/login` (Implementado en Kotlin).
-- `specs-endpoints/18-endpoint-logout/` — `POST /api/v1/auth/logout` (Implementado en Kotlin).
-- `specs-endpoints/19-endpoint-empresas/` — `GET /api/v1/empresas` (Propuesto).
-- `specs-endpoints/20-endpoint-rutas/` — `GET /api/v1/rutas` (Propuesto).
-- `specs-endpoints/21-endpoint-paradas/` — `GET /api/v1/rutas/{id}/paradas` (Propuesto).
-- `specs-endpoints/22-endpoint-destinos/` — `GET /api/v1/destinos` (Propuesto).
-- `specs-endpoints/23-endpoint-horarios-y-tarifas/` — `GET /api/v1/rutas/{id}/horarios y /tarifas` (Propuesto).
-- `specs-endpoints/24-endpoint-calificaciones/` — `GET/POST /api/v1/calificaciones` (Propuesto).
-- `specs-endpoints/25-endpoint-lotes-de-acelerometro/` — `POST /api/v1/sensores/lotes` (Propuesto).
+---
 
-## CI/CD y Azure
-
-- `cicd/` — arquitectura del pipeline y gates.
-- `azure/` — arquitectura final de despliegue (propuesta).
-
-El historial de la organización anterior está en `docs/archivo-sdd/specs-anteriores/`.
-
-## Comandos
+## 📁 Estructura del Código Realizado
 
 ```text
-flutter pub get
-dart format --output=none --set-exit-if-changed .
-flutter analyze && flutter test
+lib/
+├── core/
+│   ├── config/
+│   │   └── api_config.dart             # URL Base y catálogo de endpoints
+│   ├── network/
+│   │   ├── api_client.dart             # Cliente Dio centralizado
+│   │   ├── api_exceptions.dart         # Excepciones de error HTTP
+│   │   └── auth_interceptor.dart       # Inyección y renovación automática de JWT
+│   ├── storage/
+│   │   └── secure_storage_service.dart # Persistencia encriptada de tokens
+│   ├── map/                            # Integración de Mapas con OpenStreetMap
+│   └── theme/                          # Estilos, colores y tipografía
+├── features/
+│   ├── auth/
+│   │   ├── data/
+│   │   │   ├── models/user_model.dart  # DTOs de Usuario y Autenticación
+│   │   │   ├── auth_remote_data_source.dart
+│   │   │   └── auth_repository_impl.dart
+│   │   ├── domain/auth_repository.dart
+│   │   └── presentation/screens/       # LoginScreen y RegisterScreen
+│   ├── profile/
+│   │   └── presentation/screens/       # ProfileScreen conectado a GET /usuarios/me
+│   ├── routes/
+│   │   ├── data/
+│   │   │   ├── models/api_models.dart  # DTOs de Empresas, Rutas, Paradas, Geometría, Tarifas
+│   │   │   ├── azure_catalog_remote_data_source.dart
+│   │   │   └── azure_route_repository.dart
+│   │   └── presentation/screens/       # ExploreRoutesScreen y RouteDetailScreen
+│   └── home/
+└── main.dart                           # Coordinador de navegación y verificación de sesión
 ```
 
-## Limitaciones y advertencias
+---
 
-- No se declara funcionalidad terminada sin código y pruebas.
-- El árbol está anidado `X-main/X-main`; la raíz real es la carpeta interior.
-- No hay repositorio Git local, por lo que tags/releases no son verificables.
-- No hay despliegue Azure ni recursos provisionados.
+## 📋 Endpoints de Azure Conectados
 
-## Equipo
+| Módulo | Endpoint | Método | Descripción |
+|---|---|---|---|
+| **Salud** | `/api/v1/health` | `GET` | Sonda de disponibilidad del servidor en Azure |
+| **Auth** | `/api/v1/auth/login` | `POST` | Inicio de sesión y emisión de JWT |
+| **Auth** | `/api/v1/auth/registro` | `POST` | Registro de nuevo usuario |
+| **Auth** | `/api/v1/auth/refresh` | `POST` | Renovación silenciosa de Access Token |
+| **Auth** | `/api/v1/auth/logout` | `POST` | Cierre de sesión y revocación de Refresh Token |
+| **Usuarios** | `/api/v1/usuarios/me` | `GET` | Consulta del perfil del usuario autenticado |
+| **Empresas** | `/api/v1/empresas` | `GET` | Listado y filtro de líneas de transporte |
+| **Medios** | `/api/v1/medios-transporte` | `GET` | Catálogo de tipos de unidades |
+| **Paradas** | `/api/v1/paradas/autocompletar` | `GET` | Sugerencias rápidas de origen y destino |
+| **Rutas** | `/api/v1/rutas` | `GET` | Catálogo general de rutas |
+| **Rutas** | `/api/v1/rutas/buscar` | `GET` | Alternativas de ruta entre origen y destino |
+| **Rutas** | `/api/v1/rutas/{id}/paradas` | `GET` | Secuencia ordenada de paradas |
+| **Rutas** | `/api/v1/rutas/{id}/geometria` | `GET` | Trazo GeoJSON de la ruta para el mapa |
+| **Tarifas** | `/api/v1/tarifas/calcular` | `GET` | Cálculo de tarifa en MXN entre tramos |
+| **Destinos** | `/api/v1/destinos` | `GET` | Listado de atractivos turísticos |
 
-Fátima Ximena García González, Diego Parra Cruz, José de Jesús López Islas, Melanie Joliee Bonilla Domínguez.
+---
+
+## 👥 Equipo del Proyecto
+
+- **Fátima Ximena García González** — Product Owner
+- **Diego Parra Cruz** — Scrum Master
+- **José de Jesús López Islas** — Pruebas y Calidad
+- **Melanie Joliee Bonilla Domínguez** — Documentación

@@ -19,14 +19,13 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        // Dev default for local mock backend. Prod value injected per environment, never hardcoded in code.
-        buildConfigField("String", "AUTH_BASE_URL", "\"https://localhost:7229/\"")
+        // Azure API Base URL
+        buildConfigField("String", "AUTH_BASE_URL", "\"https://bustrack-api.wonderfulpebble-cdcb3396.northcentralus.azurecontainerapps.io/\"")
     }
 
     buildTypes {
         debug {
-            // Physical device on same LAN as dev PC (PC: 192.168.1.76). Emulator would use https://10.0.2.2:7229/.
-            buildConfigField("String", "AUTH_BASE_URL", "\"https://192.168.1.76:7229/\"")
+            buildConfigField("String", "AUTH_BASE_URL", "\"https://bustrack-api.wonderfulpebble-cdcb3396.northcentralus.azurecontainerapps.io/\"")
         }
         release {
             isMinifyEnabled = true

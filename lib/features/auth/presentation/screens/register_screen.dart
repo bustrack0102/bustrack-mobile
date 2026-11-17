@@ -3,8 +3,9 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/custom_text_field.dart';
 import '../../../../core/widgets/primary_button.dart';
+import '../../data/auth_repository_impl.dart';
 
-/// Pantalla 02 – Registro de Usuario en BusTrack.
+/// Pantalla de Registro de Usuario en BusTrack conectada a Azure API.
 class RegisterScreen extends StatefulWidget {
   final VoidCallback onLoginTap;
   final ValueChanged<String> onRegisterSuccess;
@@ -24,49 +25,84 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  final _ageController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  final _authRepository = AuthRepositoryImpl();
 
-  String? _selectedGender;
   bool _obscurePassword = true;
-  bool _gpsAlertsConsent = true;
+  bool _obscureConfirmPassword = true;
+  bool _acceptTerms = true;
   bool _isLoading = false;
-
-  final List<String> _genderOptions = [
-    'Masculino',
-    'Femenino',
-    'Otro',
-    'Prefiero no decir',
-  ];
 
   @override
   void dispose() {
     _nameController.dispose();
-    _ageController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
-  void _submitForm() {
+  Future<void> _submitForm() async {
     if (_formKey.currentState?.validate() ?? false) {
-      if (_selectedGender == null) {
+      if (!_acceptTerms) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Por favor, selecciona tu sexo')),
+          const SnackBar(
+            content:
+                Text('Debes aceptar el aviso de privacidad para registrarte'),
+          ),
         );
         return;
       }
 
       setState(() => _isLoading = true);
 
-      // Simulación de envío a endpoint de registro
-      Future.delayed(const Duration(milliseconds: 600), () {
+      try {
+        await _authRepository.registro(
+          nombreCompleto: _nameController.text.trim(),
+          correo: _emailController.text.trim(),
+          password: _passwordController.text,
+          confirmacionPassword: _confirmPasswordController.text,
+          aceptaAvisoPrivacidad: _acceptTerms,
+        );
+
         if (!mounted) return;
         setState(() => _isLoading = false);
         widget.onRegisterSuccess(_emailController.text.trim());
-      });
+      } catch (e) {
+        if (!mounted) return;
+        setState(() => _isLoading = false);
+
+        _showErrorDialog(e.toString());
+      }
     }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.error_outline_rounded, color: AppColors.error),
+            SizedBox(width: 8),
+            Text('Error de registro', style: TextStyle(fontSize: 16)),
+          ],
+        ),
+        content: Text(
+          message,
+          style: const TextStyle(fontSize: 14),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Aceptar',
+                style: TextStyle(color: AppColors.primary)),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -157,7 +193,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 4),
                 const Text(
-                  'Únete para rastrear autobuses y planificar tus rutas en tiempo real.',
+                  'Regístrate para planificar tus rutas y guardar tus itinerarios favoritos.',
                   style: AppTypography.bodySmall,
                 ),
                 const SizedBox(height: 20),
@@ -175,87 +211,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     }
                     return null;
                   },
-                ),
-                const SizedBox(height: 14),
-
-                // Fila: Edad y Selector de Sexo en dos columnas
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Campo de Edad
-                    Expanded(
-                      flex: 4,
-                      child: CustomTextField(
-                        label: 'Edad',
-                        hintText: 'Ej. 24',
-                        controller: _ageController,
-                        keyboardType: TextInputType.number,
-                        prefixIcon: const Icon(Icons.cake_outlined,
-                            color: AppColors.secondary, size: 18),
-                        validator: (val) {
-                          if (val == null || val.trim().isEmpty) {
-                            return 'Obligatorio';
-                          }
-                          final n = int.tryParse(val);
-                          if (n == null || n < 12 || n > 110) {
-                            return 'Inválida';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-
-                    // Selector de Sexo
-                    Expanded(
-                      flex: 6,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Sexo',
-                            style: AppTypography.bodyMedium.copyWith(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 13,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          DropdownButtonFormField<String>(
-                            initialValue: _selectedGender,
-                            hint: const Text('Selecciona',
-                                style: AppTypography.bodySmall),
-                            isExpanded: true,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: AppColors.inputBackground,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 12),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(
-                                    color: AppColors.inputBorder),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(
-                                    color: AppColors.inputBorder),
-                              ),
-                            ),
-                            items: _genderOptions.map((gender) {
-                              return DropdownMenuItem<String>(
-                                value: gender,
-                                child: Text(gender,
-                                    style: AppTypography.bodyMedium
-                                        .copyWith(fontSize: 13)),
-                              );
-                            }).toList(),
-                            onChanged: (val) =>
-                                setState(() => _selectedGender = val),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
                 ),
                 const SizedBox(height: 14),
 
@@ -279,7 +234,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 14),
 
-                // Campo: Contraseña con opción para mostrar u ocultar
+                // Campo: Contraseña
                 CustomTextField(
                   label: 'Contraseña',
                   hintText: 'Mínimo 8 caracteres',
@@ -305,9 +260,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     return null;
                   },
                 ),
+                const SizedBox(height: 14),
+
+                // Campo: Confirmar Contraseña
+                CustomTextField(
+                  label: 'Confirmar contraseña',
+                  hintText: 'Repite tu contraseña',
+                  controller: _confirmPasswordController,
+                  obscureText: _obscureConfirmPassword,
+                  prefixIcon: const Icon(Icons.lock_outline_rounded,
+                      color: AppColors.secondary, size: 20),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscureConfirmPassword
+                          ? Icons.visibility_outlined
+                          : Icons.visibility_off_outlined,
+                      color: AppColors.secondary,
+                      size: 20,
+                    ),
+                    onPressed: () => setState(() =>
+                        _obscureConfirmPassword = !_obscureConfirmPassword),
+                  ),
+                  validator: (val) {
+                    if (val != _passwordController.text) {
+                      return 'Las contraseñas no coinciden';
+                    }
+                    return null;
+                  },
+                ),
                 const SizedBox(height: 16),
 
-                // Tarjeta: Alertas GPS de líneas favoritas (respetando la constitución de no rastreo continuo)
+                // Tarjeta de Aviso de Privacidad
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
@@ -319,19 +302,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Checkbox(
-                        value: _gpsAlertsConsent,
+                        value: _acceptTerms,
                         activeColor: AppColors.primary,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4)),
                         onChanged: (val) =>
-                            setState(() => _gpsAlertsConsent = val ?? false),
+                            setState(() => _acceptTerms = val ?? false),
                       ),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
-                              'Alertas GPS de líneas favoritas',
+                              'Aviso de privacidad y términos',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 12,
@@ -340,7 +323,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              'Tu ubicación se utilizará únicamente para notificarte cuando el autobús esté cerca de tu parada. Sin rastreo continuo.',
+                              'Acepto el uso de mis datos exclusivamente para la consulta y gestión de transporte público en BusTrack.',
                               style: AppTypography.bodySmall.copyWith(
                                 color: AppColors.neutralDark
                                     .withValues(alpha: 0.85),

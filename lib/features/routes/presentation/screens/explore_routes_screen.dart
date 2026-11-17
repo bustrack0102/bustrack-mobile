@@ -13,9 +13,11 @@ import '../../../../core/widgets/app_buttons.dart';
 import '../../../../core/widgets/app_states.dart';
 import '../../../../core/widgets/demo_data_badge.dart';
 import '../../../history/domain/journey_history_service.dart';
-import '../../data/demo_route_repository.dart';
+import '../../data/azure_route_repository.dart';
+import '../../data/models/api_models.dart';
 import '../../domain/models/transport_route.dart';
 import '../../domain/repositories/route_repository.dart';
+import '../widgets/parada_autocomplete_field.dart';
 import '../widgets/route_card.dart';
 import 'route_detail_screen.dart';
 
@@ -44,6 +46,8 @@ class _ExploreRoutesScreenState extends State<ExploreRoutesScreen> {
 
   final TextEditingController _originController = TextEditingController();
   final TextEditingController _destinationController = TextEditingController();
+  ParadaModel? _originParada;
+  ParadaModel? _destinationParada;
 
   List<TransportRoute> _routes = const [];
   TransportRoute? _selectedRoute;
@@ -55,7 +59,7 @@ class _ExploreRoutesScreenState extends State<ExploreRoutesScreen> {
   @override
   void initState() {
     super.initState();
-    _repository = widget.repository ?? const DemoRouteRepository();
+    _repository = widget.repository ?? AzureRouteRepository();
     _historyService = widget.historyService ?? JourneyHistoryService.instance;
     _locationService =
         widget.locationService ?? const GeolocatorLocationService();
@@ -81,10 +85,25 @@ class _ExploreRoutesScreenState extends State<ExploreRoutesScreen> {
         : _originController.text;
 
     try {
-      final routes = await _repository.getRoutes(
-        query: query,
-        mode: _selectedMode,
-      );
+      // Si el usuario eligió sugerencias de la API para ambas paradas,
+      // buscar alternativas reales entre ellas; si no, usar la búsqueda por texto.
+      final originId = _originParada?.id;
+      final destinationId = _destinationParada?.id;
+      final repository = _repository;
+      final List<TransportRoute> routes;
+      if (originId != null &&
+          destinationId != null &&
+          repository is AzureRouteRepository) {
+        routes = await repository.searchAlternatives(
+          paradaOrigenId: originId,
+          paradaDestinoId: destinationId,
+        );
+      } else {
+        routes = await repository.getRoutes(
+          query: query,
+          mode: _selectedMode,
+        );
+      }
       if (!mounted) return;
 
       setState(() {
@@ -92,6 +111,15 @@ class _ExploreRoutesScreenState extends State<ExploreRoutesScreen> {
         _selectedRoute = routes.isEmpty ? null : routes.first;
         _isLoading = false;
       });
+
+      if (routes.any((route) => route.isDemo)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            behavior: SnackBarBehavior.floating,
+            content: Text(MapConfig.demoNotice),
+          ),
+        );
+      }
 
       if (recordSearch) {
         _historyService.recordSearch(
@@ -134,9 +162,12 @@ class _ExploreRoutesScreenState extends State<ExploreRoutesScreen> {
 
   void _swapLocations() {
     final origin = _originController.text;
+    final originParada = _originParada;
     setState(() {
       _originController.text = _destinationController.text;
       _destinationController.text = origin;
+      _originParada = _destinationParada;
+      _destinationParada = originParada;
     });
   }
 
@@ -341,12 +372,14 @@ class _ExploreRoutesScreenState extends State<ExploreRoutesScreen> {
               Expanded(
                 child: Column(
                   children: [
-                    _LocationField(
+                    ParadaAutocompleteField(
                       controller: _originController,
                       hint: 'Origen',
                       icon: Icons.trip_origin_rounded,
                       iconColor: AppColors.success,
                       onSubmitted: (_) => _loadRoutes(recordSearch: true),
+                      onParadaSelected: (parada) =>
+                          setState(() => _originParada = parada),
                       trailing: IconButton(
                         tooltip: 'Usar mi ubicación como origen',
                         icon: const Icon(
@@ -359,12 +392,14 @@ class _ExploreRoutesScreenState extends State<ExploreRoutesScreen> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    _LocationField(
+                    ParadaAutocompleteField(
                       controller: _destinationController,
                       hint: 'Destino',
                       icon: Icons.flag_rounded,
                       iconColor: AppColors.primary,
                       onSubmitted: (_) => _loadRoutes(recordSearch: true),
+                      onParadaSelected: (parada) =>
+                          setState(() => _destinationParada = parada),
                     ),
                   ],
                 ),
@@ -517,7 +552,11 @@ class _ExploreRoutesScreenState extends State<ExploreRoutesScreen> {
               onActionPressed: () {
                 _originController.clear();
                 _destinationController.clear();
-                setState(() => _selectedMode = null);
+                setState(() {
+                  _selectedMode = null;
+                  _originParada = null;
+                  _destinationParada = null;
+                });
                 _loadRoutes();
               },
             )
@@ -532,46 +571,6 @@ class _ExploreRoutesScreenState extends State<ExploreRoutesScreen> {
               const SizedBox(height: 10),
             ],
         ],
-      ),
-    );
-  }
-}
-
-class _LocationField extends StatelessWidget {
-  final TextEditingController controller;
-  final String hint;
-  final IconData icon;
-  final Color iconColor;
-  final ValueChanged<String>? onSubmitted;
-  final Widget? trailing;
-
-  const _LocationField({
-    required this.controller,
-    required this.hint,
-    required this.icon,
-    required this.iconColor,
-    this.onSubmitted,
-    this.trailing,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      onSubmitted: onSubmitted,
-      textInputAction: TextInputAction.search,
-      style: AppTypography.bodyMedium,
-      decoration: InputDecoration(
-        hintText: hint,
-        isDense: true,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-        prefixIcon: Icon(icon, size: 18, color: iconColor),
-        prefixIconConstraints:
-            const BoxConstraints(minWidth: 38, minHeight: 38),
-        suffixIcon: trailing,
-        suffixIconConstraints:
-            const BoxConstraints(minWidth: 38, minHeight: 38),
       ),
     );
   }

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'core/network/session_events.dart';
 import 'core/theme/app_theme.dart';
+import 'features/auth/data/auth_repository_impl.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
-import 'features/auth/presentation/screens/otp_verification_screen.dart';
 import 'features/auth/presentation/screens/register_screen.dart';
 import 'features/home/presentation/screens/main_shell_screen.dart';
 import 'features/splash/presentation/screens/splash_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const BusTrackApp());
 }
 
@@ -25,7 +27,7 @@ class BusTrackApp extends StatelessWidget {
   }
 }
 
-/// Coordinador de estado de navegación para el flujo de las primeras pantallas.
+/// Coordinador de estado de navegación para el flujo de la aplicación.
 class BusTrackNavigationCoordinator extends StatefulWidget {
   const BusTrackNavigationCoordinator({super.key});
 
@@ -37,7 +39,6 @@ class BusTrackNavigationCoordinator extends StatefulWidget {
 enum AppScreenState {
   splash,
   register,
-  otpVerification,
   login,
   mainShell,
 }
@@ -45,11 +46,53 @@ enum AppScreenState {
 class _BusTrackNavigationCoordinatorState
     extends State<BusTrackNavigationCoordinator> {
   AppScreenState _currentScreen = AppScreenState.splash;
-  String _pendingVerificationEmail = 'usuario@ejemplo.com';
   bool _isDemoMode = false;
+  final _authRepository = AuthRepositoryImpl();
+
+  @override
+  void initState() {
+    super.initState();
+    // Si el interceptor detecta que el refresh token fue rechazado,
+    // devolver al usuario al login con un aviso explícito.
+    SessionEvents.sessionExpired.addListener(_onSessionExpired);
+  }
+
+  @override
+  void dispose() {
+    SessionEvents.sessionExpired.removeListener(_onSessionExpired);
+    super.dispose();
+  }
+
+  void _onSessionExpired() {
+    if (!mounted) return;
+    if (_currentScreen == AppScreenState.login) return;
+    _isDemoMode = false;
+    _navigateTo(AppScreenState.login);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Tu sesión expiró. Inicia sesión nuevamente.'),
+      ),
+    );
+  }
 
   void _navigateTo(AppScreenState screen) {
     setState(() => _currentScreen = screen);
+  }
+
+  Future<void> _checkSessionAndNavigate() async {
+    bool hasSession = false;
+    try {
+      // En plataformas/tests sin el plugin de secure storage, fallar como "sin sesión".
+      hasSession = await _authRepository.hasActiveSession();
+    } catch (_) {
+      hasSession = false;
+    }
+    if (hasSession) {
+      _isDemoMode = false;
+      _navigateTo(AppScreenState.mainShell);
+    } else {
+      _navigateTo(AppScreenState.login);
+    }
   }
 
   @override
@@ -57,36 +100,21 @@ class _BusTrackNavigationCoordinatorState
     switch (_currentScreen) {
       case AppScreenState.splash:
         return SplashScreen(
-          onStart: () => _navigateTo(AppScreenState.login),
+          onStart: _checkSessionAndNavigate,
         );
 
       case AppScreenState.register:
         return RegisterScreen(
           onLoginTap: () => _navigateTo(AppScreenState.login),
-          onRegisterSuccess: (email) {
-            _pendingVerificationEmail = email;
-            _navigateTo(AppScreenState.otpVerification);
+          // El registro en la API ya devuelve tokens y el repositorio los
+          // guarda: el usuario queda autenticado; no hay paso OTP en el backend.
+          onRegisterSuccess: (_) {
+            _isDemoMode = false;
+            _navigateTo(AppScreenState.mainShell);
           },
           onDemoTap: () {
             _isDemoMode = true;
             _navigateTo(AppScreenState.mainShell);
-          },
-        );
-
-      case AppScreenState.otpVerification:
-        return OtpVerificationScreen(
-          email: _pendingVerificationEmail,
-          onBack: () => _navigateTo(AppScreenState.register),
-          onEditEmail: () => _navigateTo(AppScreenState.register),
-          onVerificationSuccess: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  '¡Correo verificado con éxito! Inicia sesión para continuar.',
-                ),
-              ),
-            );
-            _navigateTo(AppScreenState.login);
           },
         );
 
@@ -98,11 +126,21 @@ class _BusTrackNavigationCoordinatorState
             _navigateTo(AppScreenState.mainShell);
           },
           onForgotPasswordTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  'Se ha enviado un enlace de recuperación a tu correo.',
+            showDialog<void>(
+              context: context,
+              builder: (dialogContext) => AlertDialog(
+                title: const Text('Recuperar contraseña'),
+                content: const Text(
+                  'La recuperación de contraseña aún no está disponible '
+                  'en el servidor. Si perdiste el acceso a tu cuenta, '
+                  'contacta al administrador del sistema.',
                 ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(dialogContext).pop(),
+                    child: const Text('Entendido'),
+                  ),
+                ],
               ),
             );
           },

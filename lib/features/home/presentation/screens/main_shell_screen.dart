@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../discover/presentation/screens/discover_screen.dart';
 import '../../../history/presentation/screens/trip_history_screen.dart';
 import '../../../profile/presentation/screens/profile_screen.dart';
 import '../../../routes/presentation/screens/explore_routes_screen.dart';
@@ -33,6 +34,7 @@ class _MainShellScreenState extends State<MainShellScreen> {
         children: [
           const ExploreRoutesScreen(),
           TripHistoryScreen(onExplore: _goToExplore),
+          const DiscoverScreen(),
           ProfileScreen(
             isDemoMode: widget.isDemoMode,
             onLogout: widget.onLogout,
@@ -57,6 +59,12 @@ class _MainShellScreenState extends State<MainShellScreen> {
             icon: Icon(Icons.history_rounded),
             selectedIcon: Icon(Icons.history_rounded, color: AppColors.primary),
             label: 'Historial',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.storefront_outlined),
+            selectedIcon:
+                Icon(Icons.storefront_rounded, color: AppColors.primary),
+            label: 'Descubrir',
           ),
           NavigationDestination(
             icon: Icon(Icons.person_outline_rounded),

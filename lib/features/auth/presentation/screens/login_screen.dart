@@ -4,8 +4,9 @@ import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/custom_text_field.dart';
 import '../../../../core/widgets/live_status_card.dart';
 import '../../../../core/widgets/primary_button.dart';
+import '../../data/auth_repository_impl.dart';
 
-/// Pantalla 04 – Login de BusTrack.
+/// Pantalla de Inicio de Sesión de BusTrack conectada a Azure API.
 class LoginScreen extends StatefulWidget {
   final VoidCallback onRegisterTap;
   final VoidCallback onLoginSuccess;
@@ -26,8 +27,9 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController(text: 'pasajero@bustrack.com');
-  final _passwordController = TextEditingController(text: 'claveSegura2026');
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _authRepository = AuthRepositoryImpl();
 
   bool _obscurePassword = true;
   bool _isLoading = false;
@@ -39,17 +41,52 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _handleLogin() {
+  Future<void> _handleLogin() async {
     if (_formKey.currentState?.validate() ?? false) {
       setState(() => _isLoading = true);
 
-      // Simula consumo seguro del endpoint POST /api/v1/Auth/login
-      Future.delayed(const Duration(milliseconds: 650), () {
+      try {
+        await _authRepository.login(
+          correo: _emailController.text.trim(),
+          password: _passwordController.text,
+        );
+
         if (!mounted) return;
         setState(() => _isLoading = false);
         widget.onLoginSuccess();
-      });
+      } catch (e) {
+        if (!mounted) return;
+        setState(() => _isLoading = false);
+
+        _showErrorDialog(e.toString());
+      }
     }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.error_outline_rounded, color: AppColors.error),
+            SizedBox(width: 8),
+            Text('Error de autenticación', style: TextStyle(fontSize: 16)),
+          ],
+        ),
+        content: Text(
+          message,
+          style: const TextStyle(fontSize: 14),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Aceptar',
+                style: TextStyle(color: AppColors.primary)),
+          ),
+        ],
+      ),
+    );
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:bustrack_mobile/main.dart';
 import 'package:bustrack_mobile/features/splash/presentation/screens/splash_screen.dart';
 import 'package:bustrack_mobile/features/auth/presentation/screens/login_screen.dart';
@@ -8,6 +9,10 @@ import 'package:bustrack_mobile/features/auth/presentation/screens/otp_verificat
 import 'package:bustrack_mobile/core/widgets/live_status_card.dart';
 
 void main() {
+  // flutter_secure_storage v11 requiere su plataforma de prueba en memoria;
+  // sin ella las llamadas al canal nativo nunca responden y la app no navega.
+  FlutterSecureStorage.setMockInitialValues({});
+
   group('BusTrack Mobile - Primeras Pantallas Widget Tests', () {
     testWidgets('1. SplashScreen muestra logotipo, textos y botón Comenzar',
         (WidgetTester tester) async {
@@ -45,7 +50,12 @@ void main() {
 
         expect(find.byType(RegisterScreen), findsOneWidget);
         expect(find.text('Crear Cuenta'), findsOneWidget);
-        expect(find.text('Alertas GPS de líneas favoritas'), findsOneWidget);
+        expect(
+          find.text(
+            'Regístrate para planificar tus rutas y guardar tus itinerarios favoritos.',
+          ),
+          findsOneWidget,
+        );
       },
     );
 

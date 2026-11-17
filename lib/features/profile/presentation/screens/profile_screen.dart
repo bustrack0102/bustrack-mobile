@@ -7,9 +7,11 @@ import '../../../../core/widgets/app_buttons.dart';
 import '../../../../core/widgets/app_controls.dart';
 import '../../../../core/widgets/app_dialogs.dart';
 import '../../../../core/widgets/demo_data_badge.dart';
+import '../../../auth/data/auth_repository_impl.dart';
+import '../../../auth/data/models/user_model.dart';
 import '../../domain/account_service.dart';
 
-/// Pantalla 10 – Perfil de usuario.
+/// Pantalla 10 – Perfil de usuario conectado a Azure Backend.
 class ProfileScreen extends StatefulWidget {
   final bool isDemoMode;
   final VoidCallback onLogout;
@@ -30,7 +32,10 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   late final AccountService _accountService;
+  final AuthRepositoryImpl _authRepository = AuthRepositoryImpl();
 
+  UserModel? _userProfile;
+  bool _isLoadingProfile = true;
   bool _notificationsEnabled = true;
   bool _promotionsEnabled = false;
   String? _deletionMessage;
@@ -39,6 +44,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     _accountService = widget.accountService ?? const AccountService();
+    _loadProfile();
+  }
+
+  Future<void> _loadProfile() async {
+    if (widget.isDemoMode) {
+      setState(() => _isLoadingProfile = false);
+      return;
+    }
+
+    try {
+      final user = await _authRepository.getPerfilMe();
+      if (mounted) {
+        setState(() {
+          _userProfile = user;
+          _isLoadingProfile = false;
+        });
+      }
+    } catch (_) {
+      if (mounted) {
+        setState(() => _isLoadingProfile = false);
+      }
+    }
   }
 
   Future<void> _confirmLogout() async {
@@ -48,7 +75,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       message: '¿Deseas salir de tu cuenta de BusTrack?',
       confirmLabel: 'Cerrar sesión',
     );
-    if (confirmed == true) widget.onLogout();
+    if (confirmed == true) {
+      await _authRepository.logout();
+      widget.onLogout();
+    }
   }
 
   Future<void> _deleteAccount() async {
@@ -64,6 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     if (!mounted) return;
     if (deleted == true) {
+      await _authRepository.logout();
       widget.onLogout();
       return;
     }
@@ -117,10 +148,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final name = widget.isDemoMode ? 'Usuario Demo' : 'Pasajero BusTrack';
-    final email =
-        widget.isDemoMode ? 'demo@bustrack.com' : 'pasajero@bustrack.com';
-    final initials = widget.isDemoMode ? 'UD' : 'PB';
+    final name = widget.isDemoMode
+        ? 'Usuario Demo'
+        : (_userProfile?.nombreCompleto.isNotEmpty == true
+            ? _userProfile!.nombreCompleto
+            : 'Pasajero BusTrack');
+
+    final email = widget.isDemoMode
+        ? 'demo@bustrack.com'
+        : (_userProfile?.correo.isNotEmpty == true
+            ? _userProfile!.correo
+            : 'pasajero@bustrack.com');
+
+    final initials =
+        name.length >= 2 ? name.substring(0, 2).toUpperCase() : 'BT';
 
     return Scaffold(
       appBar: AppBar(
@@ -133,174 +174,176 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
-        children: [
-          _ProfileHeader(
-            name: name,
-            email: email,
-            initials: initials,
-            isDemoMode: widget.isDemoMode,
-          ),
-          const SizedBox(height: 20),
-          const _SectionTitle('Rutas favoritas'),
-          const SizedBox(height: 8),
-          AppCard(
-            padding: const EdgeInsets.all(14),
-            child: Row(
+      body: _isLoadingProfile
+          ? const Center(
+              child: CircularProgressIndicator(color: AppColors.primary),
+            )
+          : ListView(
+              padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
               children: [
-                const Icon(
-                  Icons.favorite_border_rounded,
-                  color: AppColors.secondary,
+                _ProfileHeader(
+                  name: name,
+                  email: email,
+                  initials: initials,
+                  isDemoMode: widget.isDemoMode,
+                  userProfile: _userProfile,
                 ),
-                const SizedBox(width: 10),
-                const Expanded(
-                  child: Text(
-                    'Sin rutas favoritas guardadas. La API de favoritos aún no '
-                    'está disponible.',
-                    style: AppTypography.bodySmall,
-                  ),
-                ),
-                TextButton(
-                  onPressed: widget.onExplore,
-                  child: const Text('Explorar'),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-          const _SectionTitle('Preferencias de notificaciones'),
-          const SizedBox(height: 4),
-          AppCard(
-            padding: const EdgeInsets.symmetric(vertical: 4),
-            child: Column(
-              children: [
-                AppSwitch(
-                  value: _notificationsEnabled,
-                  onChanged: (value) =>
-                      setState(() => _notificationsEnabled = value),
-                  title: 'Avisos de servicio',
-                  subtitle: 'Preferencia local; sincronización pendiente.',
-                  icon: Icons.notifications_none_rounded,
-                ),
-                const Divider(height: 1, color: AppColors.inputBorder),
-                AppSwitch(
-                  value: _promotionsEnabled,
-                  onChanged: (value) =>
-                      setState(() => _promotionsEnabled = value),
-                  title: 'Novedades y promociones',
-                  subtitle: 'Preferencia local; sincronización pendiente.',
-                  icon: Icons.campaign_outlined,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-          const _SectionTitle('Configuración del mapa'),
-          const SizedBox(height: 8),
-          AppCard(
-            padding: const EdgeInsets.all(14),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Row(
-                  children: [
-                    Icon(
-                      Icons.map_outlined,
-                      size: 18,
-                      color: AppColors.secondary,
-                    ),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        'OpenStreetMap · mapa interactivo',
-                        style: AppTypography.bodyMedium,
-                      ),
-                    ),
-                  ],
-                ),
+                const SizedBox(height: 20),
+                const _SectionTitle('Rutas favoritas'),
                 const SizedBox(height: 8),
-                Text(
-                  'La ubicación solo se solicita al activarla en Explorar o en '
-                  'Viaje en curso. No hay rastreo en segundo plano.',
-                  style: AppTypography.bodySmall.copyWith(fontSize: 11),
+                AppCard(
+                  padding: const EdgeInsets.all(14),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.favorite_border_rounded,
+                        color: AppColors.secondary,
+                      ),
+                      const SizedBox(width: 10),
+                      const Expanded(
+                        child: Text(
+                          'Explora las rutas registradas en el sistema y planifica tus viajes.',
+                          style: AppTypography.bodySmall,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: widget.onExplore,
+                        child: const Text('Explorar'),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const _SectionTitle('Preferencias de notificaciones'),
+                const SizedBox(height: 4),
+                AppCard(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Column(
+                    children: [
+                      AppSwitch(
+                        value: _notificationsEnabled,
+                        onChanged: (value) =>
+                            setState(() => _notificationsEnabled = value),
+                        title: 'Avisos de servicio',
+                        subtitle: 'Recibe alertas sobre cambios en rutas.',
+                        icon: Icons.notifications_none_rounded,
+                      ),
+                      const Divider(height: 1, color: AppColors.inputBorder),
+                      AppSwitch(
+                        value: _promotionsEnabled,
+                        onChanged: (value) =>
+                            setState(() => _promotionsEnabled = value),
+                        title: 'Novedades y promociones',
+                        subtitle: 'Nuevos destinos turísticos y sugerencias.',
+                        icon: Icons.campaign_outlined,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const _SectionTitle('Configuración del mapa'),
+                const SizedBox(height: 8),
+                AppCard(
+                  padding: const EdgeInsets.all(14),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Row(
+                        children: [
+                          Icon(
+                            Icons.map_outlined,
+                            size: 18,
+                            color: AppColors.secondary,
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              'OpenStreetMap · mapa interactivo',
+                              style: AppTypography.bodyMedium,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'La ubicación solo se solicita al activarla en Explorar o en '
+                        'Viaje en curso. Sin rastreo en segundo plano.',
+                        style: AppTypography.bodySmall.copyWith(fontSize: 11),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const _SectionTitle('Ayuda y legal'),
+                const SizedBox(height: 8),
+                AppCard(
+                  padding: EdgeInsets.zero,
+                  child: Column(
+                    children: [
+                      _MenuTile(
+                        icon: Icons.help_outline_rounded,
+                        label: 'Centro de ayuda',
+                        onTap: () => _showInfo(
+                          title: 'Centro de ayuda',
+                          body:
+                              'Para dudas sobre rutas, paradas y tarifas, consulta la '
+                              'información mostrada en la app. Si detectas datos '
+                              'incorrectos, usa "Calificar y contribuir" desde el '
+                              'detalle de la ruta.',
+                        ),
+                      ),
+                      const Divider(height: 1, color: AppColors.inputBorder),
+                      _MenuTile(
+                        icon: Icons.description_outlined,
+                        label: 'Términos de servicio',
+                        onTap: () => _showInfo(
+                          title: 'Términos de servicio',
+                          body:
+                              'Consulta las condiciones de servicio de BusTrack '
+                              'en nuestro sitio oficial.',
+                        ),
+                      ),
+                      const Divider(height: 1, color: AppColors.inputBorder),
+                      _MenuTile(
+                        icon: Icons.privacy_tip_outlined,
+                        label: 'Aviso de privacidad',
+                        onTap: () => _showInfo(
+                          title: 'Aviso de privacidad',
+                          body:
+                              'La app solicita ubicación en primer plano solo cuando '
+                              'la activas para una función concreta. No hay captura '
+                              'de acelerómetro sin consentimiento ni rastreo continuo.',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+                AppSecondaryButton(
+                  text: 'Cerrar sesión',
+                  icon: Icons.logout_rounded,
+                  height: 48,
+                  onPressed: _confirmLogout,
+                ),
+                const SizedBox(height: 10),
+                TextButton.icon(
+                  onPressed: _deleteAccount,
+                  icon: const Icon(
+                    Icons.delete_forever_rounded,
+                    color: AppColors.error,
+                    size: 18,
+                  ),
+                  label: const Text(
+                    'Eliminar cuenta',
+                    style: TextStyle(
+                      color: AppColors.error,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                    ),
+                  ),
                 ),
               ],
             ),
-          ),
-          const SizedBox(height: 20),
-          const _SectionTitle('Ayuda y legal'),
-          const SizedBox(height: 8),
-          AppCard(
-            padding: EdgeInsets.zero,
-            child: Column(
-              children: [
-                _MenuTile(
-                  icon: Icons.help_outline_rounded,
-                  label: 'Centro de ayuda',
-                  onTap: () => _showInfo(
-                    title: 'Centro de ayuda',
-                    body:
-                        'Para dudas sobre rutas, paradas y tarifas, consulta la '
-                        'información mostrada en la app. Si detectas datos '
-                        'incorrectos, usa “Calificar y contribuir” desde el '
-                        'detalle de la ruta. El historial y las recompensas aún '
-                        'no se sincronizan con la API central.',
-                  ),
-                ),
-                const Divider(height: 1, color: AppColors.inputBorder),
-                _MenuTile(
-                  icon: Icons.description_outlined,
-                  label: 'Términos de servicio',
-                  onTap: () => _showInfo(
-                    title: 'Términos de servicio',
-                    body: 'El documento legal oficial está pendiente de '
-                        'publicación. No se muestran condiciones inventadas en '
-                        'la aplicación.',
-                  ),
-                ),
-                const Divider(height: 1, color: AppColors.inputBorder),
-                _MenuTile(
-                  icon: Icons.privacy_tip_outlined,
-                  label: 'Aviso de privacidad',
-                  onTap: () => _showInfo(
-                    title: 'Aviso de privacidad',
-                    body:
-                        'La app solicita ubicación en primer plano solo cuando '
-                        'la activas para una función concreta. No hay captura '
-                        'de acelerómetro sin consentimiento ni rastreo continuo. '
-                        'El aviso legal completo está pendiente de publicación.',
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 24),
-          AppSecondaryButton(
-            text: 'Cerrar sesión',
-            icon: Icons.logout_rounded,
-            height: 48,
-            onPressed: _confirmLogout,
-          ),
-          const SizedBox(height: 10),
-          TextButton.icon(
-            onPressed: _deleteAccount,
-            icon: const Icon(
-              Icons.delete_forever_rounded,
-              color: AppColors.error,
-              size: 18,
-            ),
-            label: const Text(
-              'Eliminar cuenta',
-              style: TextStyle(
-                color: AppColors.error,
-                fontWeight: FontWeight.bold,
-                fontSize: 13,
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
@@ -310,12 +353,14 @@ class _ProfileHeader extends StatelessWidget {
   final String email;
   final String initials;
   final bool isDemoMode;
+  final UserModel? userProfile;
 
   const _ProfileHeader({
     required this.name,
     required this.email,
     required this.initials,
     required this.isDemoMode,
+    this.userProfile,
   });
 
   @override
@@ -387,7 +432,7 @@ class _ProfileHeader extends StatelessWidget {
                       Text(
                         isDemoMode
                             ? 'Cuenta de demostración'
-                            : 'Cuenta verificada',
+                            : 'Cuenta en Azure',
                         style: AppTypography.caption.copyWith(
                           fontSize: 9,
                           color: isDemoMode

@@ -25,11 +25,13 @@ class ApiConfig {
   // --- Módulo 2: Empresas y Medios de Transporte ---
   static const String empresas = '/api/v1/empresas';
   static const String empresasAutocompletar = '/api/v1/empresas/autocompletar';
+  static const String empresasComparar = '/api/v1/empresas/comparar';
   static const String mediosTransporte = '/api/v1/medios-transporte';
 
   // --- Módulo 3: Rutas, Paradas y Mapas ---
   static const String paradas = '/api/v1/paradas';
   static const String paradasAutocompletar = '/api/v1/paradas/autocompletar';
+  static const String paradasCercanas = '/api/v1/paradas/cercanas';
   static const String rutas = '/api/v1/rutas';
   static const String rutasBuscar = '/api/v1/rutas/buscar';
   static const String rutasAutocompletar = '/api/v1/rutas/autocompletar';
@@ -46,12 +48,38 @@ class ApiConfig {
   static const String destinosAutocompletar = '/api/v1/destinos/autocompletar';
   static const String destinosCategorias = '/api/v1/destinos/categorias';
 
-  // --- Módulo 6: Sensores & Machine Learning ---
+  // --- Módulo 6: Calificaciones, Historial y Consentimientos ---
+  static const String calificaciones = '/api/v1/calificaciones';
+  static const String calificacionesResumen = '/api/v1/calificaciones/resumen';
+  static const String calificacionesMias = '/api/v1/calificaciones/mias';
+  static const String viajes = '/api/v1/viajes';
+  static const String consentimientosMe = '/api/v1/consentimientos/me';
+  static const String consentimientos = '/api/v1/consentimientos';
+
+  // --- Módulo 7: Sensores, Machine Learning & GenAI ---
   static const String sensoresLotes = '/api/v1/sensores/lotes';
+  static const String telemetriaInferencia = '/api/v1/telemetria/inferencia';
   static const String mlClasificarPatron = '/api/v1/ml/clasificar-patron';
+  static const String recomendaciones = '/api/v1/recomendaciones';
+  static const String recomendacionesHistorial =
+      '/api/v1/recomendaciones/historial';
+
+  // --- Módulo 8: Dispositivos, Media & Moderación ---
+  static const String dispositivos = '/api/v1/dispositivos';
+  static const String dispositivosMios = '/api/v1/dispositivos/mios';
+  static const String mediaUpload = '/api/v1/media/upload';
+  static const String moderacion = '/api/v1/moderacion';
+  static const String moderacionArchivo = '/api/v1/moderacion/archivo';
+
+  // --- Módulo 9: Administración ---
+  static const String candidatosParada = '/api/v1/candidatos-parada';
+  static const String adminCandidatosValidar =
+      '/api/v1/admin/candidatos-parada';
 
   // --- Módulo 10: General & Salud ---
   static const String health = '/api/v1/health';
+  static const String healthLive = '/health';
+  static const String healthReady = '/health/ready';
   static const String estadoActualizacion =
       '/api/v1/catalogos/estado-actualizacion';
 }

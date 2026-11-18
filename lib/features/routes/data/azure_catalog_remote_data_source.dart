@@ -166,4 +166,81 @@ class AzureCatalogRemoteDataSource {
     }
     return [];
   }
+
+  /// Obtiene el listado de categorías de destinos registradas en Azure.
+  Future<List<String>> getDestinosCategorias() async {
+    try {
+      final response = await _apiClient.get(ApiConfig.destinosCategorias);
+      if (response.data is List) {
+        return (response.data as List)
+            .map((e) =>
+                (e is Map ? e['categoria']?.toString() : e.toString()) ?? '')
+            .where((s) => s.isNotEmpty)
+            .toList();
+      }
+    } catch (_) {}
+    return [];
+  }
+
+  /// Obtiene los elementos del mapa cartográfico (paradas y destinos con coordenadas).
+  Future<Map<String, dynamic>?> getMapaElementos(
+      {String? bbox, String? tipo}) async {
+    try {
+      final response = await _apiClient.get(
+        ApiConfig.mapaElementos,
+        queryParameters: {
+          if (bbox != null) 'bbox': bbox,
+          if (tipo != null) 'tipo': tipo,
+        },
+      );
+      if (response.data is Map<String, dynamic>) {
+        return response.data as Map<String, dynamic>;
+      }
+    } catch (_) {}
+    return null;
+  }
+
+  /// Consulta las paradas cercanas en función de las coordenadas de latitud/longitud.
+  Future<List<ParadaModel>> getParadasCercanas({
+    required double lat,
+    required double lng,
+    double radioKm = 2.0,
+  }) async {
+    try {
+      final response = await _apiClient.get(
+        ApiConfig.paradasCercanas,
+        queryParameters: {
+          'lat': lat,
+          'lng': lng,
+          'radioKm': radioKm,
+        },
+      );
+      if (response.data is List) {
+        return (response.data as List)
+            .map((e) => ParadaModel.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
+    } catch (_) {}
+    return [];
+  }
+
+  /// Consulta la próxima salida estimada para una ruta y parada.
+  Future<Map<String, dynamic>?> getProximaSalida({
+    required String rutaId,
+    String? paradaId,
+  }) async {
+    try {
+      final response = await _apiClient.get(
+        ApiConfig.horariosSiguiente,
+        queryParameters: {
+          'rutaId': rutaId,
+          if (paradaId != null) 'paradaId': paradaId,
+        },
+      );
+      if (response.data is Map<String, dynamic>) {
+        return response.data as Map<String, dynamic>;
+      }
+    } catch (_) {}
+    return null;
+  }
 }

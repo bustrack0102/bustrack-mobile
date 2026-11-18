@@ -189,3 +189,26 @@ Flutter -> API central por HTTPS/REST. No acceso directo a Cosmos ni a ML/GenAI.
   - **Estado:** Implementado, verificado y validado con `check_sdd.ps1` (`SDD-OK`), `flutter analyze` (0 issues), `dart format` (0 cambios pendientes) y suite completa de pruebas unitarias y de widgets (`flutter test` 47/47 aprobadas).
   - **Riesgos:** Ninguno. La simulación demo permanece 100% aislada; el acelerómetro exige consentimiento explícito previo y es revocable en todo momento.
   - **Relación con otros repos:** Contratos alineados con API central de Azure (`bustrack-api`); no se accede directamente a Cosmos DB.
+
+- **2026-11-18:** integración completa de endpoints de Azure, auditoría DevSecOps y versionamiento para Prueba Cerrada en Google Play Console.
+  - **Decisión:** 
+    1. **Auditoría e Integración de Endpoints:** Conectar endpoints reales reemplazando mocks y servicios locales:
+       - Actualización de perfil y borrado de cuenta en `UsuariosController` (`PUT /api/v1/usuarios/me`, `DELETE /api/v1/usuarios/me`).
+       - Calificaciones y reportes en `CalificacionesController` (`POST /api/v1/calificaciones`).
+       - Gestión de viajes en `ViajesController` (`GET`, `POST`, `PUT`, `DELETE /api/v1/viajes`).
+       - Gestión de consentimientos en `ConsentimientosController` (`GET`, `POST`, `DELETE /api/v1/consentimientos`).
+       - Lotes de telemetría de acelerómetro en `SensoresController` (`POST /api/v1/sensores/lotes`).
+       - Catálogos de mapa, categorías de destinos y paradas cercanas en `MapaController`, `DestinosController` y `ParadasController`.
+       - Documentación exhaustiva en `docs/INTEGRACION-ENDPOINTS-MOBILE.md`.
+    2. **Auditoría de Seguridad y DevSecOps:**
+       - OWASP MASVS L2: `android:allowBackup="false"`, `network_security_config.xml` con `cleartextTrafficPermitted="false"`.
+       - Almacenamiento de tokens en Android Keystore mediante `FlutterSecureStorage` con AES-GCM / RSA-OAEP.
+       - Permisos estrictos en primer plano (`ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION`, `INTERNET`), sin geolocalización continua ni accesos en segundo plano no autorizados.
+       - No exposición de secretos en código.
+    3. **Versionamiento para Prueba Cerrada:**
+       - Actualización en `pubspec.yaml` a `version: 1.1.0+2` (`versionCode = 2`, `versionName = 1.1.0`), satisfaciendo el incremento requerido por Google Play Console tras la prueba interna inicial (`1.0.0+1`).
+  - **Motivo:** Conectar completamente la app Flutter con el backend ASP.NET Core en Azure Container Apps, garantizar los estándares de DevSecOps y preparar el release para la pista de Prueba Cerrada en Google Play Console.
+  - **Archivos afectados:** `pubspec.yaml`, `lib/core/config/api_config.dart`, `lib/core/widgets/app_dialogs.dart`, `lib/features/auth/data/auth_remote_data_source.dart`, `lib/features/auth/data/auth_repository_impl.dart`, `lib/features/auth/domain/auth_repository.dart`, `lib/features/feedback/data/calificaciones_remote_data_source.dart`, `lib/features/feedback/domain/contribution_service.dart`, `lib/features/history/data/viajes_remote_data_source.dart`, `lib/features/history/domain/journey_history_service.dart`, `lib/features/profile/data/consentimientos_remote_data_source.dart`, `lib/features/profile/domain/account_service.dart`, `lib/features/profile/presentation/screens/edit_profile_screen.dart`, `lib/features/profile/presentation/screens/permissions_manager_screen.dart`, `lib/features/profile/presentation/screens/profile_screen.dart`, `lib/features/routes/data/azure_catalog_remote_data_source.dart`, `lib/features/sensors/domain/services/accelerometer_service.dart`, `lib/features/sensors/presentation/widgets/accelerometer_consent_dialog.dart`, `docs/INTEGRACION-ENDPOINTS-MOBILE.md`, `Memoria.md`.
+  - **Estado:** `flutter analyze` reporta 0 issues, `dart format` verificado con 0 cambios, `flutter test` aprueba las 47 pruebas unitarias y de widgets, y `check_sdd.ps1` valida `SDD-OK`.
+  - **Riesgos:** Ninguno. La aplicación cuenta con fallback resiliente si el backend no se encuentra disponible.
+  - **Relación con otros repos:** Alineado 1:1 con `bustrack-api` en Azure.

@@ -127,6 +127,40 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<UserModel> updatePerfilMe({
+    required String nombreCompleto,
+    required String correo,
+    String? passwordActual,
+    String? nuevaPassword,
+  }) async {
+    final updated = await _remoteDataSource.updatePerfilMe(
+      nombreCompleto: nombreCompleto,
+      correo: correo,
+      passwordActual: passwordActual,
+      nuevaPassword: nuevaPassword,
+    );
+
+    await _storage.saveUserData(
+      id: updated.id,
+      name: updated.nombreCompleto,
+      email: updated.correo,
+      role: updated.rol,
+    );
+
+    return updated;
+  }
+
+  @override
+  Future<void> deleteCuentaMe({required String passwordConfirmacion}) async {
+    try {
+      await _remoteDataSource.deleteCuentaMe(
+          passwordConfirmacion: passwordConfirmacion);
+    } finally {
+      await _storage.clearSession();
+    }
+  }
+
+  @override
   Future<void> solicitarRecuperacionPassword(String correo) async {
     await _remoteDataSource.solicitarRecuperacionPassword(correo);
   }

@@ -79,13 +79,15 @@ class AppDialogs {
   /// Diálogo modal formal de Eliminación de Cuenta conforme al estándar de Google Play Store.
   static Future<bool?> showAccountDeletionDialog({
     required BuildContext context,
-    required Future<bool> Function() onConfirmDelete,
+    required Future<bool> Function(String password) onConfirmDelete,
   }) {
+    String password = '';
     return showDialog<bool>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext dialogContext) {
         bool isDeleting = false;
+        String? errorMessage;
 
         return StatefulBuilder(
           builder: (context, setState) {
@@ -116,33 +118,50 @@ class AppDialogs {
                   ),
                 ],
               ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Esta acción es definitiva e irreversible. Se eliminarán:',
-                    style: AppTypography.bodyMedium
-                        .copyWith(fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 8.0),
-                  _buildBulletPoint('Tus rutas y paradas favoritas guardadas.'),
-                  _buildBulletPoint('Historial de consultas y preferencias.'),
-                  _buildBulletPoint('Tus credenciales de acceso seguro.'),
-                  const SizedBox(height: 12.0),
-                  Container(
-                    padding: const EdgeInsets.all(10.0),
-                    decoration: BoxDecoration(
-                      color: AppColors.inputBackground,
-                      borderRadius: BorderRadius.circular(10.0),
-                      border: Border.all(color: AppColors.inputBorder),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Esta acción es definitiva e irreversible en Azure. Se eliminarán:',
+                      style: AppTypography.bodyMedium
+                          .copyWith(fontWeight: FontWeight.w600),
                     ),
-                    child: const Text(
-                      'Si tienes problemas con la app, también puedes solicitar la baja desde nuestro portal web oficial de privacidad.',
-                      style: AppTypography.bodySmall,
+                    const SizedBox(height: 8.0),
+                    _buildBulletPoint(
+                        'Tus rutas y paradas favoritas guardadas.'),
+                    _buildBulletPoint('Historial de viajes y preferencias.'),
+                    _buildBulletPoint(
+                        'Tus credenciales y sesiones de acceso seguro.'),
+                    const SizedBox(height: 12.0),
+                    const Text(
+                      'Por seguridad, ingresa tu contraseña para confirmar la baja:',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.neutralDark,
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 6),
+                    TextField(
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        hintText: 'Contraseña actual',
+                        prefixIcon: Icon(Icons.lock_outline_rounded, size: 20),
+                      ),
+                      onChanged: (val) => password = val,
+                    ),
+                    if (errorMessage != null) ...[
+                      const SizedBox(height: 6),
+                      Text(
+                        errorMessage!,
+                        style: const TextStyle(
+                            color: AppColors.error, fontSize: 11),
+                      ),
+                    ],
+                  ],
+                ),
               ),
               actionsPadding:
                   const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
@@ -158,8 +177,16 @@ class AppDialogs {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      setState(() => isDeleting = true);
-                      final success = await onConfirmDelete();
+                      if (password.trim().isEmpty) {
+                        setState(() => errorMessage =
+                            'Ingresa tu contraseña para confirmar');
+                        return;
+                      }
+                      setState(() {
+                        isDeleting = true;
+                        errorMessage = null;
+                      });
+                      final success = await onConfirmDelete(password.trim());
                       if (context.mounted) {
                         Navigator.of(dialogContext).pop(success);
                       }

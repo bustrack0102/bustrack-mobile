@@ -4,6 +4,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../sensors/domain/services/accelerometer_service.dart';
 import '../../../sensors/presentation/widgets/accelerometer_consent_dialog.dart';
+import '../../data/consentimientos_remote_data_source.dart';
 
 /// Pantalla para gestionar y transparentar los permisos del dispositivo (Sección 6.4).
 class PermissionsManagerScreen extends StatefulWidget {
@@ -158,9 +159,20 @@ class _PermissionsManagerScreenState extends State<PermissionsManagerScreen> {
                     isEnabled: hasConsent,
                     onChanged: (val) async {
                       if (val) {
-                        await AccelerometerConsentDialog.show(context);
+                        final granted =
+                            await AccelerometerConsentDialog.show(context);
+                        if (granted == true) {
+                          try {
+                            await ConsentimientosRemoteDataSource()
+                                .otorgarConsentimiento();
+                          } catch (_) {}
+                        }
                       } else {
                         _sensorService.revokeConsent();
+                        try {
+                          await ConsentimientosRemoteDataSource()
+                              .revocarConsentimiento();
+                        } catch (_) {}
                       }
                       setState(() {});
                     },

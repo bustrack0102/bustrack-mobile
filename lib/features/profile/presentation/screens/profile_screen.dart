@@ -48,7 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _accountService = widget.accountService ?? const AccountService();
+    _accountService = widget.accountService ?? AccountService();
     _loadProfile();
   }
 
@@ -90,8 +90,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _deletionMessage = null;
     final deleted = await AppDialogs.showAccountDeletionDialog(
       context: context,
-      onConfirmDelete: () async {
-        final result = await _accountService.requestDeletion();
+      onConfirmDelete: (password) async {
+        final result = await _accountService.requestDeletion(
+          passwordConfirmacion: password,
+        );
         _deletionMessage = result.message;
         return result.deleted;
       },
@@ -99,7 +101,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     if (!mounted) return;
     if (deleted == true) {
-      await _authRepository.logout();
       widget.onLogout();
       return;
     }

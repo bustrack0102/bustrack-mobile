@@ -4,6 +4,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/custom_text_field.dart';
 import '../../../../core/widgets/primary_button.dart';
+import '../../../auth/data/auth_repository_impl.dart';
 import '../../../auth/data/models/user_model.dart';
 
 /// Pantalla para editar información del perfil de usuario.
@@ -45,19 +46,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> _handleSave() async {
     if (_formKey.currentState?.validate() ?? false) {
       setState(() => _isSaving = true);
-      await Future<void>.delayed(const Duration(milliseconds: 600));
+      try {
+        await AuthRepositoryImpl().updatePerfilMe(
+          nombreCompleto: _nameController.text.trim(),
+          correo: _emailController.text.trim(),
+        );
 
-      if (!mounted) return;
-      setState(() => _isSaving = false);
+        if (!mounted) return;
+        setState(() => _isSaving = false);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: AppColors.success,
-          content: Text('Perfil actualizado correctamente.'),
-        ),
-      );
-      widget.onSaved();
-      Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: AppColors.success,
+            content: Text('Perfil actualizado correctamente en Azure.'),
+          ),
+        );
+        widget.onSaved();
+        Navigator.of(context).pop();
+      } catch (e) {
+        if (!mounted) return;
+        setState(() => _isSaving = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: AppColors.error,
+            content: Text('Error al actualizar perfil: $e'),
+          ),
+        );
+      }
     }
   }
 

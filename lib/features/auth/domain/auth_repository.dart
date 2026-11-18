@@ -21,6 +21,15 @@ abstract class AuthRepository {
 
   Future<bool> hasActiveSession();
 
+  Future<UserModel> updatePerfilMe({
+    required String nombreCompleto,
+    required String correo,
+    String? passwordActual,
+    String? nuevaPassword,
+  });
+
+  Future<void> deleteCuentaMe({required String passwordConfirmacion});
+
   Future<void> solicitarRecuperacionPassword(String correo);
 
   Future<void> restablecerPassword({

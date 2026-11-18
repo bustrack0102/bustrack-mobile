@@ -1,3 +1,4 @@
+import '../data/calificaciones_remote_data_source.dart';
 import 'models/contribution.dart';
 
 class ExperienceContribution {
@@ -107,11 +108,22 @@ class ContributionService {
       ),
     );
 
-    return const ContributionResult(
+    bool remoteSuccess = false;
+    try {
+      await CalificacionesRemoteDataSource().crearCalificacion(
+        rutaId: routeId,
+        puntuacion: overallRating,
+        comentario: comment.trim(),
+      );
+      remoteSuccess = true;
+    } catch (_) {}
+
+    return ContributionResult(
       storedLocally: true,
-      syncedWithApi: false,
-      message: 'Calificación guardada localmente. La sincronización con la API '
-          'central está pendiente.',
+      syncedWithApi: remoteSuccess,
+      message: remoteSuccess
+          ? 'Calificación enviada y registrada en Azure exitosamente.'
+          : 'Calificación guardada localmente. Pendiente de sincronización con la API central.',
     );
   }
 

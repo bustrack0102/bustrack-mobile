@@ -143,25 +143,33 @@ class AccelerometerService extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Envía un lote anonimizado a la API central de Azure para validación ML.
-  Future<void> submitBatchIfAuthorized(String routeId) async {
+  /// Envía un lote de telemetría inercial a Azure (LoteSensorCreateRequest: EP-ML-01..07)
+  Future<void> submitBatchIfAuthorized(String routeId,
+      {String? viajeId}) async {
     if (!_hasConsent || _samplesBuffer.isEmpty) return;
 
     try {
       final payload = {
-        'rutaId': routeId,
-        'fechaRegistro': DateTime.now().toIso8601String(),
-        'patronClasificado': _currentResult.pattern.name,
-        'confianza': _currentResult.confidence,
-        'esCandidatoParada': _currentResult.isStopCandidate,
-        'totalMuestras': _samplesBuffer.length,
-        'muestras': _samplesBuffer.map((s) => s.toJson()).toList(),
+        'ViajeId':
+            viajeId ?? 'viaje-auto-${DateTime.now().millisecondsSinceEpoch}',
+        'RutaId': routeId,
+        'IntervaloMuestreoMs': 200,
+        'Muestras': _samplesBuffer.asMap().entries.map((entry) {
+          final idx = entry.key;
+          final s = entry.value;
+          return {
+            'TimestampRelativoMs': idx * 200,
+            'AccelX': s.x,
+            'AccelY': s.y,
+            'AccelZ': s.z,
+          };
+        }).toList(),
       };
 
       await _apiClient.post(ApiConfig.sensoresLotes, data: payload);
     } catch (_) {
-      // Tolerancia: si la API no está disponible o el endpoint aún no responde,
-      // no bloquea la experiencia del usuario.
+      // Tolerancia: si la API no está disponible o el lote no pudo procesarse,
+      // no interrumpe la navegación del usuario.
     }
   }
 }

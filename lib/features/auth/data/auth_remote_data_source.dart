@@ -93,6 +93,37 @@ class AuthRemoteDataSource {
     );
   }
 
+  /// Actualiza los datos del perfil propio (nombreCompleto, correo, password).
+  Future<UserModel> updatePerfilMe({
+    required String nombreCompleto,
+    required String correo,
+    String? passwordActual,
+    String? nuevaPassword,
+  }) async {
+    final response = await _apiClient.put(
+      ApiConfig.usuarioMe,
+      data: {
+        'nombreCompleto': nombreCompleto.trim(),
+        'correo': correo.trim(),
+        if (passwordActual != null && passwordActual.isNotEmpty)
+          'passwordActual': passwordActual,
+        if (nuevaPassword != null && nuevaPassword.isNotEmpty)
+          'nuevaPassword': nuevaPassword,
+      },
+    );
+    return UserModel.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  /// Da de baja definitiva la cuenta del usuario en Azure.
+  Future<void> deleteCuentaMe({required String passwordConfirmacion}) async {
+    await _apiClient.delete(
+      ApiConfig.usuarioMe,
+      data: {
+        'passwordConfirmacion': passwordConfirmacion,
+      },
+    );
+  }
+
   /// Valida el token de verificación de correo electrónico.
   Future<bool> verificarCorreo({
     required String correo,

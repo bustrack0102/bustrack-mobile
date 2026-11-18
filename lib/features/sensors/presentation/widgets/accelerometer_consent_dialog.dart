@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
+import '../../../profile/data/consentimientos_remote_data_source.dart';
 import '../../domain/services/accelerometer_service.dart';
 
 /// Diálogo de consentimiento informado y explícito para el sensor acelerómetro.
@@ -84,9 +85,14 @@ class AccelerometerConsentDialog extends StatelessWidget {
               style: TextStyle(color: AppColors.textMuted)),
         ),
         ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
             AccelerometerService().grantConsent();
-            Navigator.of(context).pop(true);
+            try {
+              await ConsentimientosRemoteDataSource().otorgarConsentimiento();
+            } catch (_) {}
+            if (context.mounted) {
+              Navigator.of(context).pop(true);
+            }
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.primary,

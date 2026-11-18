@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../data/viajes_remote_data_source.dart';
 import 'models/journey_record.dart';
 
 /// Historial local en memoria de búsquedas y viajes.
@@ -65,6 +66,16 @@ class JourneyHistoryService extends ChangeNotifier {
     );
     _journeys.insert(0, journey);
     notifyListeners();
+
+    if (!isDemo) {
+      ViajesRemoteDataSource()
+          .crearViaje(
+            titulo: '$routeCode · $origin → $destination',
+            rutaId: routeId,
+          )
+          .then((_) => null, onError: (_) {});
+    }
+
     return journey;
   }
 

@@ -1,3 +1,5 @@
+import '../../auth/data/auth_repository_impl.dart';
+
 /// Resultado de una solicitud de eliminación de cuenta.
 class AccountDeletionResult {
   final bool deleted;
@@ -9,20 +11,31 @@ class AccountDeletionResult {
   });
 }
 
-/// Servicio de cuenta.
-///
-/// La eliminación real requiere el endpoint de cuenta de la API central, que
-/// todavía no está implementado. No se elimina solo el estado local para no
-/// simular una baja que no existe en el servidor.
+/// Servicio de cuenta conectado al endpoint DELETE /api/v1/usuarios/me.
 class AccountService {
-  const AccountService();
+  final AuthRepositoryImpl _authRepository;
 
-  Future<AccountDeletionResult> requestDeletion() async {
-    return const AccountDeletionResult(
-      deleted: false,
-      message:
-          'La eliminación de cuenta requiere el endpoint de cuenta de la API '
-          'central, que aún no está disponible. No se eliminó ningún dato.',
-    );
+  AccountService({AuthRepositoryImpl? authRepository})
+      : _authRepository = authRepository ?? AuthRepositoryImpl();
+
+  /// Solicita la baja definitiva de cuenta en el servidor de Azure.
+  Future<AccountDeletionResult> requestDeletion({
+    required String passwordConfirmacion,
+  }) async {
+    try {
+      await _authRepository.deleteCuentaMe(
+        passwordConfirmacion: passwordConfirmacion,
+      );
+      return const AccountDeletionResult(
+        deleted: true,
+        message:
+            'Tu cuenta y datos personales han sido eliminados del servidor.',
+      );
+    } catch (e) {
+      return AccountDeletionResult(
+        deleted: false,
+        message: 'No se pudo eliminar la cuenta: $e',
+      );
+    }
   }
 }

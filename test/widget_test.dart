@@ -5,21 +5,20 @@ import 'package:bustrack_mobile/main.dart';
 import 'package:bustrack_mobile/features/splash/presentation/screens/splash_screen.dart';
 import 'package:bustrack_mobile/features/auth/presentation/screens/login_screen.dart';
 import 'package:bustrack_mobile/features/auth/presentation/screens/register_screen.dart';
-import 'package:bustrack_mobile/features/auth/presentation/screens/otp_verification_screen.dart';
+import 'package:bustrack_mobile/features/auth/presentation/screens/forgot_password_screen.dart';
+import 'package:bustrack_mobile/features/auth/presentation/screens/email_verification_screen.dart';
+import 'package:bustrack_mobile/features/demo/presentation/screens/demo_shell_screen.dart';
 import 'package:bustrack_mobile/core/widgets/live_status_card.dart';
 
 void main() {
-  // flutter_secure_storage v11 requiere su plataforma de prueba en memoria;
-  // sin ella las llamadas al canal nativo nunca responden y la app no navega.
   FlutterSecureStorage.setMockInitialValues({});
 
-  group('BusTrack Mobile - Primeras Pantallas Widget Tests', () {
-    testWidgets('1. SplashScreen muestra logotipo, textos y botón Comenzar',
+  group('BusTrack Mobile - Flujos y Pantallas Widget Tests', () {
+    testWidgets('1. SplashScreen muestra logotipo y botón Comenzar',
         (WidgetTester tester) async {
       await tester.pumpWidget(const BusTrackApp());
 
       expect(find.byType(SplashScreen), findsOneWidget);
-      expect(find.text('BusTrack'), findsNothing); // Is RichText
       expect(find.text('Comenzar'), findsOneWidget);
       expect(find.text('V2.0 OFICIAL'), findsOneWidget);
     });
@@ -50,33 +49,58 @@ void main() {
 
         expect(find.byType(RegisterScreen), findsOneWidget);
         expect(find.text('Crear Cuenta'), findsOneWidget);
-        expect(
-          find.text(
-            'Regístrate para planificar tus rutas y guardar tus itinerarios favoritos.',
-          ),
-          findsOneWidget,
-        );
       },
     );
 
     testWidgets(
-      '4. OtpVerificationScreen muestra casillas de código, paso 3 de 3 y correo',
+      '4. LoginScreen navega a ForgotPasswordScreen al presionar ¿Olvidaste tu contraseña?',
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const BusTrackApp());
+
+        await tester.tap(find.text('Comenzar'));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.text('¿Olvidaste tu contraseña?'));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(ForgotPasswordScreen), findsOneWidget);
+        expect(find.text('Recuperar contraseña'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      '5. LoginScreen navega a DemoShellScreen al presionar Modo Demo',
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const BusTrackApp());
+
+        await tester.tap(find.text('Comenzar'));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.text('Modo Demo'));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(DemoShellScreen), findsOneWidget);
+        expect(find.text('Modo Demostración · Simulación local sin conexión'),
+            findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      '6. EmailVerificationScreen muestra correo enmascarado y controles de token',
       (WidgetTester tester) async {
         await tester.pumpWidget(
           MaterialApp(
-            home: OtpVerificationScreen(
-              email: 'carlos@ejemplo.com',
-              onBack: () {},
-              onEditEmail: () {},
+            home: EmailVerificationScreen(
+              email: 'carlos.mendoza@correo.com',
               onVerificationSuccess: () {},
+              onBackToRegister: () {},
             ),
           ),
         );
 
-        expect(find.text('PASO 3 DE 3'), findsOneWidget);
-        expect(find.text('Verifica tu correo'), findsOneWidget);
-        expect(find.text('c***s@ejemplo.com'), findsOneWidget);
-        expect(find.text('Verificar'), findsOneWidget);
+        expect(find.text('Confirma tu correo electrónico'), findsOneWidget);
+        expect(find.text('Verificar y activar cuenta'), findsOneWidget);
+        expect(find.text('c***a@correo.com'), findsOneWidget);
       },
     );
   });

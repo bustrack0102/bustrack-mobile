@@ -65,6 +65,26 @@ class SecureStorageService {
     };
   }
 
+  /// Recupera el ID del usuario almacenado.
+  Future<String?> getUserId() async {
+    return await _storage.read(key: _keyUserId);
+  }
+
+  /// Recupera el nombre completo del usuario almacenado.
+  Future<String?> getUserName() async {
+    return await _storage.read(key: _keyUserName);
+  }
+
+  /// Recupera el correo electrónico del usuario almacenado.
+  Future<String?> getUserEmail() async {
+    return await _storage.read(key: _keyUserEmail);
+  }
+
+  /// Recupera el rol del usuario almacenado.
+  Future<String?> getUserRole() async {
+    return await _storage.read(key: _keyUserRole);
+  }
+
   /// Comprueba si existe una sesión guardada activa.
   Future<bool> hasActiveSession() async {
     final token = await getAccessToken();

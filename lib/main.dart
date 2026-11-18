@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+
 import 'core/network/session_events.dart';
 import 'core/theme/app_theme.dart';
 import 'features/auth/data/auth_repository_impl.dart';
+import 'features/auth/presentation/screens/email_verification_screen.dart';
+import 'features/auth/presentation/screens/email_verified_screen.dart';
+import 'features/auth/presentation/screens/forgot_password_screen.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
 import 'features/auth/presentation/screens/register_screen.dart';
+import 'features/auth/presentation/screens/reset_password_screen.dart';
+import 'features/demo/presentation/screens/demo_shell_screen.dart';
 import 'features/home/presentation/screens/main_shell_screen.dart';
 import 'features/splash/presentation/screens/splash_screen.dart';
 
@@ -27,7 +33,7 @@ class BusTrackApp extends StatelessWidget {
   }
 }
 
-/// Coordinador de estado de navegación para el flujo de la aplicación.
+/// Coordinador central de navegación y estado de flujo de BusTrack.
 class BusTrackNavigationCoordinator extends StatefulWidget {
   const BusTrackNavigationCoordinator({super.key});
 
@@ -40,20 +46,25 @@ enum AppScreenState {
   splash,
   register,
   login,
+  emailVerification,
+  emailVerified,
+  forgotPassword,
+  resetPassword,
   mainShell,
+  demoShell,
 }
 
 class _BusTrackNavigationCoordinatorState
     extends State<BusTrackNavigationCoordinator> {
   AppScreenState _currentScreen = AppScreenState.splash;
   bool _isDemoMode = false;
+  String _pendingVerificationEmail = '';
+  String _passwordRecoveryEmail = '';
   final _authRepository = AuthRepositoryImpl();
 
   @override
   void initState() {
     super.initState();
-    // Si el interceptor detecta que el refresh token fue rechazado,
-    // devolver al usuario al login con un aviso explícito.
     SessionEvents.sessionExpired.addListener(_onSessionExpired);
   }
 
@@ -82,7 +93,6 @@ class _BusTrackNavigationCoordinatorState
   Future<void> _checkSessionAndNavigate() async {
     bool hasSession = false;
     try {
-      // En plataformas/tests sin el plugin de secure storage, fallar como "sin sesión".
       hasSession = await _authRepository.hasActiveSession();
     } catch (_) {
       hasSession = false;
@@ -106,15 +116,31 @@ class _BusTrackNavigationCoordinatorState
       case AppScreenState.register:
         return RegisterScreen(
           onLoginTap: () => _navigateTo(AppScreenState.login),
-          // El registro en la API ya devuelve tokens y el repositorio los
-          // guarda: el usuario queda autenticado; no hay paso OTP en el backend.
-          onRegisterSuccess: (_) {
-            _isDemoMode = false;
-            _navigateTo(AppScreenState.mainShell);
+          onRegisterSuccess: (email) {
+            _pendingVerificationEmail = email;
+            _navigateTo(AppScreenState.emailVerification);
           },
           onDemoTap: () {
-            _isDemoMode = true;
-            _navigateTo(AppScreenState.mainShell);
+            _navigateTo(AppScreenState.demoShell);
+          },
+        );
+
+      case AppScreenState.emailVerification:
+        return EmailVerificationScreen(
+          email: _pendingVerificationEmail,
+          onVerificationSuccess: () {
+            _navigateTo(AppScreenState.emailVerified);
+          },
+          onBackToRegister: () => _navigateTo(AppScreenState.register),
+          onEmailChanged: (newEmail) {
+            _pendingVerificationEmail = newEmail;
+          },
+        );
+
+      case AppScreenState.emailVerified:
+        return EmailVerifiedScreen(
+          onContinue: () {
+            _navigateTo(AppScreenState.login);
           },
         );
 
@@ -126,34 +152,40 @@ class _BusTrackNavigationCoordinatorState
             _navigateTo(AppScreenState.mainShell);
           },
           onForgotPasswordTap: () {
-            showDialog<void>(
-              context: context,
-              builder: (dialogContext) => AlertDialog(
-                title: const Text('Recuperar contraseña'),
-                content: const Text(
-                  'La recuperación de contraseña aún no está disponible '
-                  'en el servidor. Si perdiste el acceso a tu cuenta, '
-                  'contacta al administrador del sistema.',
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(dialogContext).pop(),
-                    child: const Text('Entendido'),
-                  ),
-                ],
-              ),
-            );
+            _navigateTo(AppScreenState.forgotPassword);
           },
           onDemoTap: () {
-            _isDemoMode = true;
-            _navigateTo(AppScreenState.mainShell);
+            _navigateTo(AppScreenState.demoShell);
           },
+        );
+
+      case AppScreenState.forgotPassword:
+        return ForgotPasswordScreen(
+          onBackToLogin: () => _navigateTo(AppScreenState.login),
+          onCodeSent: (email) {
+            _passwordRecoveryEmail = email;
+            _navigateTo(AppScreenState.resetPassword);
+          },
+        );
+
+      case AppScreenState.resetPassword:
+        return ResetPasswordScreen(
+          email: _passwordRecoveryEmail,
+          onBack: () => _navigateTo(AppScreenState.forgotPassword),
+          onResetSuccess: () => _navigateTo(AppScreenState.login),
         );
 
       case AppScreenState.mainShell:
         return MainShellScreen(
           isDemoMode: _isDemoMode,
           onLogout: () => _navigateTo(AppScreenState.login),
+        );
+
+      case AppScreenState.demoShell:
+        return DemoShellScreen(
+          onExitDemo: () {
+            _navigateTo(AppScreenState.register);
+          },
         );
     }
   }

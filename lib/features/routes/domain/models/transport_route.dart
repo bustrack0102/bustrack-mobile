@@ -112,6 +112,8 @@ class TransportRoute {
 
   bool get hasRegisteredGeometry => geometry.length >= 2;
 
+  double get fareMxn => fare;
+
   String get fareLabel => '\$${fare.toStringAsFixed(2)} $currency';
 
   String get displayName => '$code · $name';

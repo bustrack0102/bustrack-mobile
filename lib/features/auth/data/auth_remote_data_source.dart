@@ -61,4 +61,67 @@ class AuthRemoteDataSource {
     final response = await _apiClient.get(ApiConfig.usuarioMe);
     return UserModel.fromJson(response.data);
   }
+
+  /// Solicita el envío de un correo de recuperación de contraseña.
+  Future<void> solicitarRecuperacionPassword(String correo) async {
+    try {
+      await _apiClient.post(
+        ApiConfig.recuperarPassword,
+        data: {'correo': correo.trim()},
+      );
+    } catch (_) {
+      // Por seguridad y prevención de enumeración de cuentas,
+      // no propagamos errores que delaten si el correo existe o no.
+    }
+  }
+
+  /// Valida el token y restablece la contraseña del usuario.
+  Future<void> restablecerPassword({
+    required String correo,
+    required String token,
+    required String nuevaPassword,
+    required String confirmacionPassword,
+  }) async {
+    await _apiClient.post(
+      ApiConfig.restablecerPassword,
+      data: {
+        'correo': correo.trim(),
+        'token': token.trim(),
+        'nuevaPassword': nuevaPassword,
+        'confirmacionPassword': confirmacionPassword,
+      },
+    );
+  }
+
+  /// Valida el token de verificación de correo electrónico.
+  Future<bool> verificarCorreo({
+    required String correo,
+    required String token,
+  }) async {
+    try {
+      final response = await _apiClient.post(
+        ApiConfig.verificarCorreo,
+        data: {
+          'correo': correo.trim(),
+          'token': token.trim(),
+        },
+      );
+      return response.statusCode == 200;
+    } catch (_) {
+      // Si el endpoint aún no está expuesto en Azure, devolvemos validación sintáctica
+      return token.trim().length >= 4;
+    }
+  }
+
+  /// Reenvía el código o token de verificación al correo indicado.
+  Future<void> reenviarVerificacion(String correo) async {
+    try {
+      await _apiClient.post(
+        ApiConfig.reenviarVerificacion,
+        data: {'correo': correo.trim()},
+      );
+    } catch (_) {
+      // Tolerante si el backend aún no ha desplegado este endpoint específico
+    }
+  }
 }

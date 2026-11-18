@@ -16,6 +16,7 @@ import '../../../history/domain/journey_history_service.dart';
 import '../../../history/domain/models/journey_record.dart';
 import '../../../routes/domain/models/route_stop.dart';
 import '../../../routes/domain/models/transport_route.dart';
+import '../../../sensors/presentation/widgets/sensor_status_card.dart';
 
 /// Pantalla 8 – Viaje en curso.
 ///
@@ -400,13 +401,7 @@ class _TripInProgressScreenState extends State<TripInProgressScreen> {
                               '${widget.route.nextArrivalMinutes} min.',
                     ),
                     const SizedBox(height: 10),
-                    const _TripInfoTile(
-                      icon: Icons.sensors_off_rounded,
-                      title: 'Acelerómetro',
-                      detail:
-                          'Desactivado. Requiere consentimiento explícito y el '
-                          'procesamiento de sensores aún no está habilitado.',
-                    ),
+                    SensorStatusCard(routeId: widget.route.id),
                     const SizedBox(height: 14),
                     Wrap(
                       spacing: 8,

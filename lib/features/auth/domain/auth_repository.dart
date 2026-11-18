@@ -20,4 +20,20 @@ abstract class AuthRepository {
   Future<UserModel?> getPerfilMe();
 
   Future<bool> hasActiveSession();
+
+  Future<void> solicitarRecuperacionPassword(String correo);
+
+  Future<void> restablecerPassword({
+    required String correo,
+    required String token,
+    required String nuevaPassword,
+    required String confirmacionPassword,
+  });
+
+  Future<bool> verificarCorreo({
+    required String correo,
+    required String token,
+  });
+
+  Future<void> reenviarVerificacion(String correo);
 }

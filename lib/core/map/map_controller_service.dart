@@ -58,6 +58,11 @@ class MapControllerService {
     controller.move(controller.camera.center, nextZoom);
   }
 
+  /// Alias de conveniencia para ajustar la vista a una lista de puntos.
+  void centerOnPoints(List<GeoPoint> points) {
+    fitPoints(points);
+  }
+
   void dispose() {
     controller.dispose();
   }

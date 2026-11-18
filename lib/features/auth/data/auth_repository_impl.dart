@@ -101,14 +101,19 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<UserModel?> getPerfilMe() async {
     try {
       return await _remoteDataSource.getPerfilMe();
-    } catch (e) {
-      final localData = await _storage.getUserData();
-      if (localData['id'] != null && localData['id']!.isNotEmpty) {
+    } catch (_) {
+      // Si no hay conexion o fallo, intentar recuperar los datos guardados en local
+      final id = await _storage.getUserId();
+      final name = await _storage.getUserName();
+      final email = await _storage.getUserEmail();
+      final role = await _storage.getUserRole();
+
+      if (id != null && name != null && email != null) {
         return UserModel(
-          id: localData['id']!,
-          nombreCompleto: localData['name'] ?? '',
-          correo: localData['email'] ?? '',
-          rol: localData['role'] ?? 'Usuario',
+          id: id,
+          nombreCompleto: name,
+          correo: email,
+          rol: role ?? 'Usuario',
         );
       }
       return null;
@@ -117,11 +122,43 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<bool> hasActiveSession() async {
-    try {
-      return await _storage.hasActiveSession();
-    } catch (_) {
-      // Sin el plugin de secure storage disponible (tests/preview), no hay sesión.
-      return false;
-    }
+    final token = await _storage.getAccessToken();
+    return token != null && token.isNotEmpty;
+  }
+
+  @override
+  Future<void> solicitarRecuperacionPassword(String correo) async {
+    await _remoteDataSource.solicitarRecuperacionPassword(correo);
+  }
+
+  @override
+  Future<void> restablecerPassword({
+    required String correo,
+    required String token,
+    required String nuevaPassword,
+    required String confirmacionPassword,
+  }) async {
+    await _remoteDataSource.restablecerPassword(
+      correo: correo,
+      token: token,
+      nuevaPassword: nuevaPassword,
+      confirmacionPassword: confirmacionPassword,
+    );
+  }
+
+  @override
+  Future<bool> verificarCorreo({
+    required String correo,
+    required String token,
+  }) async {
+    return await _remoteDataSource.verificarCorreo(
+      correo: correo,
+      token: token,
+    );
+  }
+
+  @override
+  Future<void> reenviarVerificacion(String correo) async {
+    await _remoteDataSource.reenviarVerificacion(correo);
   }
 }

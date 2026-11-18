@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/custom_text_field.dart';
@@ -64,9 +65,10 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _showErrorDialog(String message) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Row(
           children: [
             Icon(Icons.error_outline_rounded, color: AppColors.error),
@@ -82,7 +84,8 @@ class _LoginScreenState extends State<LoginScreen> {
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
             child: const Text('Aceptar',
-                style: TextStyle(color: AppColors.primary)),
+                style: TextStyle(
+                    color: AppColors.primary, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -109,15 +112,22 @@ class _LoginScreenState extends State<LoginScreen> {
                     Row(
                       children: [
                         Container(
-                          width: 38,
-                          height: 38,
+                          width: 40,
+                          height: 40,
                           decoration: BoxDecoration(
                             color: AppColors.surfaceWhite,
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                                 color: AppColors.primary, width: 1.5),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.primary.withValues(alpha: 0.1),
+                                blurRadius: 6,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
                           ),
-                          padding: const EdgeInsets.all(2),
+                          padding: const EdgeInsets.all(3),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image.asset(
@@ -129,18 +139,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: const Icon(
                                   Icons.directions_bus_filled_rounded,
                                   color: AppColors.surfaceWhite,
-                                  size: 18,
+                                  size: 20,
                                 ),
                               ),
                             ),
                           ),
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: 10),
                         RichText(
                           text: const TextSpan(
                             style: TextStyle(
                               fontFamily: AppTypography.fontFamily,
-                              fontSize: 18,
+                              fontSize: 20,
                               fontWeight: FontWeight.w800,
                               color: AppColors.neutralDark,
                             ),
@@ -155,39 +165,41 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ],
                     ),
-                    TextButton(
+                    TextButton.icon(
                       onPressed: widget.onDemoTap,
+                      icon: const Icon(Icons.explore_outlined,
+                          size: 15, color: AppColors.secondary),
+                      label: const Text(
+                        'Modo Demo',
+                        style: TextStyle(
+                          color: AppColors.secondary,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                      ),
                       style: TextButton.styleFrom(
                         backgroundColor:
-                            AppColors.tertiary.withValues(alpha: 0.4),
+                            AppColors.tertiary.withValues(alpha: 0.45),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 6),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                      child: const Text(
-                        'Modo Demo',
-                        style: TextStyle(
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 11,
-                        ),
+                            borderRadius: BorderRadius.circular(10)),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 28),
 
                 // Título «Bienvenido»
                 const Text(
                   'Bienvenido',
-                  style: AppTypography.titleLarge,
+                  style: AppTypography.headlineMedium,
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
 
                 // Mensaje descriptivo
                 const Text(
-                  'Inicia sesión para continuar tus viajes y monitorear tus rutas favoritas.',
+                  'Inicia sesión para consultar tus rutas, planificar viajes y gestionar tus itinerarios favoritos.',
                   style: AppTypography.bodySmall,
                 ),
                 const SizedBox(height: 24),
@@ -291,7 +303,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           style: TextStyle(
                             color: AppColors.primary,
                             fontWeight: FontWeight.bold,
-                            fontSize: 12,
+                            fontSize: 13,
                           ),
                         ),
                       ),

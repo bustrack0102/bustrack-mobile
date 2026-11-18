@@ -17,6 +17,9 @@ class ApiConfig {
   static const String logout = '/api/v1/auth/logout';
   static const String recuperarPassword = '/api/v1/auth/recuperar-password';
   static const String restablecerPassword = '/api/v1/auth/restablecer-password';
+  static const String verificarCorreo = '/api/v1/auth/verificar-correo';
+  static const String reenviarVerificacion =
+      '/api/v1/auth/reenviar-verificacion';
   static const String usuarioMe = '/api/v1/usuarios/me';
 
   // --- Módulo 2: Empresas y Medios de Transporte ---
@@ -42,6 +45,10 @@ class ApiConfig {
   static const String destinos = '/api/v1/destinos';
   static const String destinosAutocompletar = '/api/v1/destinos/autocompletar';
   static const String destinosCategorias = '/api/v1/destinos/categorias';
+
+  // --- Módulo 6: Sensores & Machine Learning ---
+  static const String sensoresLotes = '/api/v1/sensores/lotes';
+  static const String mlClasificarPatron = '/api/v1/ml/clasificar-patron';
 
   // --- Módulo 10: General & Salud ---
   static const String health = '/api/v1/health';

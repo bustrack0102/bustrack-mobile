@@ -19,6 +19,7 @@ import '../../domain/models/transport_route.dart';
 import '../../domain/repositories/route_repository.dart';
 import '../widgets/parada_autocomplete_field.dart';
 import '../widgets/route_card.dart';
+import '../widgets/stop_detail_sheet.dart';
 import 'route_detail_screen.dart';
 
 /// Pantalla 6 – Buscador de rutas / Explorar con mapa interactivo.
@@ -291,6 +292,37 @@ class _ExploreRoutesScreenState extends State<ExploreRoutesScreen> {
               ),
               onMarkerTap: (marker) {
                 if (marker.kind == AppMapMarkerKind.userLocation) return;
+                final route = _selectedRoute;
+                if (route != null) {
+                  final stop = route.orderedStops
+                      .where(
+                          (s) => s.id == marker.id || marker.id.contains(s.id))
+                      .firstOrNull;
+                  if (stop != null) {
+                    showModalBottomSheet<void>(
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      builder: (_) => StopDetailSheet(
+                        stop: stop,
+                        routeName: route.name,
+                        companyName: route.companyName,
+                        fareMxn: route.fareMxn,
+                        scheduleText: '05:30 - 23:00',
+                        onSetAsOrigin: () {
+                          _originController.text = stop.name;
+                          Navigator.of(context).pop();
+                          _loadRoutes(recordSearch: true);
+                        },
+                        onSetAsDestination: () {
+                          _destinationController.text = stop.name;
+                          Navigator.of(context).pop();
+                          _loadRoutes(recordSearch: true);
+                        },
+                      ),
+                    );
+                    return;
+                  }
+                }
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     behavior: SnackBarBehavior.floating,

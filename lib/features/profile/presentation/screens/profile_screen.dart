@@ -2,14 +2,19 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
-import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/app_buttons.dart';
+import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/app_controls.dart';
 import '../../../../core/widgets/app_dialogs.dart';
 import '../../../../core/widgets/demo_data_badge.dart';
 import '../../../auth/data/auth_repository_impl.dart';
 import '../../../auth/data/models/user_model.dart';
+import '../../../routes/presentation/screens/admin_route_management_screen.dart';
+import '../../../sensors/presentation/widgets/sensor_status_card.dart';
 import '../../domain/account_service.dart';
+import 'edit_profile_screen.dart';
+import 'permissions_manager_screen.dart';
+import 'privacy_policy_screen.dart';
 
 /// Pantalla 10 – Perfil de usuario conectado a Azure Backend.
 class ProfileScreen extends StatefulWidget {
@@ -187,8 +192,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   initials: initials,
                   isDemoMode: widget.isDemoMode,
                   userProfile: _userProfile,
+                  onEditTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => EditProfileScreen(
+                          user: _userProfile,
+                          onSaved: _loadProfile,
+                        ),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 20),
+
+                // Sección: Sensores del teléfono & Machine Learning
+                const _SectionTitle('Sensores & Detección de Movimiento'),
+                const SizedBox(height: 8),
+                const SensorStatusCard(),
+                const SizedBox(height: 20),
+
+                // Sección: Administración de Rutas en Mapa (Sección 3.3)
+                const _SectionTitle('Herramientas Operativas'),
+                const SizedBox(height: 8),
+                AppCard(
+                  padding: EdgeInsets.zero,
+                  child: _MenuTile(
+                    icon: Icons.map_rounded,
+                    label: 'Administración Geográfica de Rutas',
+                    subtitle:
+                        'Crear rutas, colocar paradas y ordenar el recorrido',
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const AdminRouteManagementScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 20),
+
                 const _SectionTitle('Rutas favoritas'),
                 const SizedBox(height: 8),
                 AppCard(
@@ -241,78 +284,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                const _SectionTitle('Configuración del mapa'),
-                const SizedBox(height: 8),
-                AppCard(
-                  padding: const EdgeInsets.all(14),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Row(
-                        children: [
-                          Icon(
-                            Icons.map_outlined,
-                            size: 18,
-                            color: AppColors.secondary,
-                          ),
-                          SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              'OpenStreetMap · mapa interactivo',
-                              style: AppTypography.bodyMedium,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'La ubicación solo se solicita al activarla en Explorar o en '
-                        'Viaje en curso. Sin rastreo en segundo plano.',
-                        style: AppTypography.bodySmall.copyWith(fontSize: 11),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-                const _SectionTitle('Ayuda y legal'),
+                const _SectionTitle('Privacidad y Seguridad'),
                 const SizedBox(height: 8),
                 AppCard(
                   padding: EdgeInsets.zero,
                   child: Column(
                     children: [
                       _MenuTile(
+                        icon: Icons.shield_outlined,
+                        label: 'Privacidad y Protección de Datos',
+                        subtitle: 'Consulta el tratamiento integral de datos',
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                              builder: (_) => const PrivacyPolicyScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                      const Divider(height: 1, color: AppColors.inputBorder),
+                      _MenuTile(
+                        icon: Icons.phonelink_lock_rounded,
+                        label: 'Administrador de Permisos',
+                        subtitle: 'Ubicación, notificaciones y acelerómetro',
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                              builder: (_) => const PermissionsManagerScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                      const Divider(height: 1, color: AppColors.inputBorder),
+                      _MenuTile(
                         icon: Icons.help_outline_rounded,
                         label: 'Centro de ayuda',
                         onTap: () => _showInfo(
                           title: 'Centro de ayuda',
                           body:
-                              'Para dudas sobre rutas, paradas y tarifas, consulta la '
-                              'información mostrada en la app. Si detectas datos '
-                              'incorrectos, usa "Calificar y contribuir" desde el '
-                              'detalle de la ruta.',
-                        ),
-                      ),
-                      const Divider(height: 1, color: AppColors.inputBorder),
-                      _MenuTile(
-                        icon: Icons.description_outlined,
-                        label: 'Términos de servicio',
-                        onTap: () => _showInfo(
-                          title: 'Términos de servicio',
-                          body:
-                              'Consulta las condiciones de servicio de BusTrack '
-                              'en nuestro sitio oficial.',
-                        ),
-                      ),
-                      const Divider(height: 1, color: AppColors.inputBorder),
-                      _MenuTile(
-                        icon: Icons.privacy_tip_outlined,
-                        label: 'Aviso de privacidad',
-                        onTap: () => _showInfo(
-                          title: 'Aviso de privacidad',
-                          body:
-                              'La app solicita ubicación en primer plano solo cuando '
-                              'la activas para una función concreta. No hay captura '
-                              'de acelerómetro sin consentimiento ni rastreo continuo.',
+                              'Para dudas sobre rutas, paradas y tarifas, consulta la información mostrada en la app. Si detectas datos incorrectos, usa "Calificar y contribuir" desde el detalle de la ruta.',
                         ),
                       ),
                     ],
@@ -334,7 +344,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     size: 18,
                   ),
                   label: const Text(
-                    'Eliminar cuenta',
+                    'Eliminar cuenta permanentemente',
                     style: TextStyle(
                       color: AppColors.error,
                       fontWeight: FontWeight.bold,
@@ -354,6 +364,7 @@ class _ProfileHeader extends StatelessWidget {
   final String initials;
   final bool isDemoMode;
   final UserModel? userProfile;
+  final VoidCallback? onEditTap;
 
   const _ProfileHeader({
     required this.name,
@@ -361,6 +372,7 @@ class _ProfileHeader extends StatelessWidget {
     required this.initials,
     required this.isDemoMode,
     this.userProfile,
+    this.onEditTap,
   });
 
   @override
@@ -372,121 +384,152 @@ class _ProfileHeader extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppColors.tertiary),
       ),
-      child: Row(
+      child: Column(
         children: [
-          Container(
-            width: 62,
-            height: 62,
-            decoration: BoxDecoration(
-              color: AppColors.primary,
-              shape: BoxShape.circle,
-              border: Border.all(color: AppColors.surfaceWhite, width: 3),
-            ),
-            child: Center(
-              child: Text(
-                initials,
-                style: const TextStyle(
-                  color: AppColors.surfaceWhite,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
+          Row(
+            children: [
+              Container(
+                width: 62,
+                height: 62,
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(18),
                 ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(name, style: AppTypography.titleMedium),
-                const SizedBox(height: 2),
-                Text(email, style: AppTypography.bodySmall),
-                const SizedBox(height: 6),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: isDemoMode
-                        ? AppColors.inputBackground
-                        : AppColors.success.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(999),
-                    border: Border.all(
-                      color: isDemoMode
-                          ? AppColors.inputBorder
-                          : AppColors.success.withValues(alpha: 0.4),
+                child: Center(
+                  child: Text(
+                    initials,
+                    style: const TextStyle(
+                      fontFamily: AppTypography.fontFamily,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.surfaceWhite,
                     ),
                   ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        isDemoMode
-                            ? Icons.science_outlined
-                            : Icons.verified_rounded,
-                        size: 12,
-                        color: isDemoMode
-                            ? AppColors.secondary
-                            : AppColors.success,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: AppTypography.titleMedium.copyWith(fontSize: 17),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      email,
+                      style: AppTypography.bodySmall,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceWhite,
+                        borderRadius: BorderRadius.circular(6),
                       ),
-                      const SizedBox(width: 4),
-                      Text(
-                        isDemoMode
-                            ? 'Cuenta de demostración'
-                            : 'Cuenta en Azure',
-                        style: AppTypography.caption.copyWith(
-                          fontSize: 9,
-                          color: isDemoMode
-                              ? AppColors.secondary
-                              : AppColors.success,
+                      child: Text(
+                        userProfile?.rol ?? 'Usuario',
+                        style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.secondary,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+              ),
+              if (onEditTap != null && !isDemoMode)
+                IconButton(
+                  icon: const Icon(Icons.edit_outlined,
+                      size: 20, color: AppColors.secondary),
+                  onPressed: onEditTap,
+                ),
+            ],
+          ),
+          if (userProfile != null && !isDemoMode) ...[
+            const SizedBox(height: 14),
+            const Divider(color: AppColors.inputBorder, height: 1),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildStatItem('Viajes registrados',
+                    '${userProfile!.totalViajesGuardados}'),
+                _buildStatItem(
+                    'Calificaciones', '${userProfile!.totalCalificaciones}'),
+                _buildStatItem(
+                    'Sensores',
+                    userProfile!.consentimientoSensoresActivo
+                        ? 'Activo'
+                        : 'Opcional'),
               ],
             ),
-          ),
+          ],
         ],
       ),
+    );
+  }
+
+  Widget _buildStatItem(String label, String value) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: const TextStyle(
+            fontWeight: FontWeight.w800,
+            fontSize: 14,
+            color: AppColors.neutralDark,
+          ),
+        ),
+        Text(label, style: AppTypography.labelSmall),
+      ],
     );
   }
 }
 
 class _SectionTitle extends StatelessWidget {
   final String title;
-
   const _SectionTitle(this.title);
 
   @override
   Widget build(BuildContext context) {
-    return Text(title, style: AppTypography.titleMedium);
+    return Text(
+      title,
+      style: AppTypography.titleMedium.copyWith(fontSize: 15),
+    );
   }
 }
 
 class _MenuTile extends StatelessWidget {
   final IconData icon;
   final String label;
+  final String? subtitle;
   final VoidCallback onTap;
 
   const _MenuTile({
     required this.icon,
     required this.label,
+    this.subtitle,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: onTap,
-      leading: Icon(icon, size: 20, color: AppColors.secondary),
-      title: Text(
-        label,
-        style: AppTypography.bodyMedium.copyWith(fontSize: 13),
-      ),
+      leading: Icon(icon, color: AppColors.secondary, size: 22),
+      title: Text(label, style: AppTypography.bodyMedium),
+      subtitle: subtitle != null
+          ? Text(subtitle!, style: AppTypography.labelSmall)
+          : null,
       trailing: const Icon(
         Icons.chevron_right_rounded,
-        color: AppColors.secondary,
+        color: AppColors.disabledText,
       ),
+      onTap: onTap,
     );
   }
 }

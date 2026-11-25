@@ -190,6 +190,18 @@ Flutter -> API central por HTTPS/REST. No acceso directo a Cosmos ni a ML/GenAI.
   - **Riesgos:** Ninguno. La simulación demo permanece 100% aislada; el acelerómetro exige consentimiento explícito previo y es revocable en todo momento.
   - **Relación con otros repos:** Contratos alineados con API central de Azure (`bustrack-api`); no se accede directamente a Cosmos DB.
 
+- **2026-11-25:** implementación de pantalla faltante de Asistente IA de Viaje, refinamiento visual e incremento a versión 1.1.0+4.
+  - **Decisión:**
+    1. **Pantalla Faltante:** Crear `AiTripAssistantScreen` en `lib/features/routes/presentation/screens/ai_trip_assistant_screen.dart` conectada a `RecomendacionesRemoteDataSource` (`POST /api/v1/recomendaciones`, `GET /api/v1/recomendaciones/historial`, `POST /api/v1/recomendaciones/{id}/retroalimentacion`).
+    2. **Integración en Navegación y UI:** Agregar accesos directos al Asistente de Viaje IA desde `ProfileScreen` (sección Herramientas e IA) y `DiscoverScreen` (acción en AppBar) con badges y paleta oficial.
+    3. **Refinamiento Visual:** Asegurar apego riguroso al sistema de diseño canónico (Plus Jakarta Sans, paleta Rojo Intenso `#CF1B1B`, Rojo Vino `#900D0D`, Beige Cálido `#FFDBC5`, Gris Neutro `#333333`, bordes redondeados y microinteracciones).
+    4. **Versionamiento Play Console:** Incrementar a `version: 1.1.0+4` (`versionCode = 4`, `versionName = 1.1.0`) en `pubspec.yaml` conforme a la regla permanente estipulada en `AGENTS.md`.
+  - **Motivo:** Enriquecer la aplicación con la funcionalidad de recomendación asistida por IA generativa respetando contratos del backend y preparar un build con código de versión estrictamente nuevo para Google Play Console.
+  - **Archivos afectados:** `pubspec.yaml`, `lib/features/routes/presentation/screens/ai_trip_assistant_screen.dart`, `lib/features/discover/presentation/screens/discover_screen.dart`, `lib/features/profile/presentation/screens/profile_screen.dart`, `Memoria.md`.
+  - **Estado:** `flutter analyze` 0 issues, `dart format` verificado, `flutter test` 47/47 pruebas aprobadas y `scripts/check_sdd.ps1` reporta `SDD-OK`.
+  - **Riesgos:** Ninguno; consumo defensivo con fallback ante indisponibilidad del servicio externo.
+  - **Relación con otros repos:** Alineado con `bustrack-api` y `bustrack-genai`.
+
 - **2026-11-25:** incremento de versionCode a 3 y regla permanente de versionamiento Play Console en AGENTS.md.
   - **Decisión:** 
     1. Actualizar `pubspec.yaml` a `version: 1.1.0+3` (`versionCode = 3`, `versionName = 1.1.0`), debido a que Google Play Console rechazó la subida de un nuevo AAB indicando que el código de versión 2 ya fue utilizado previamente.

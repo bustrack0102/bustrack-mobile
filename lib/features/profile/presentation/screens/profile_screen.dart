@@ -10,6 +10,7 @@ import '../../../../core/widgets/demo_data_badge.dart';
 import '../../../auth/data/auth_repository_impl.dart';
 import '../../../auth/data/models/user_model.dart';
 import '../../../routes/presentation/screens/admin_route_management_screen.dart';
+import '../../../routes/presentation/screens/ai_trip_assistant_screen.dart';
 import '../../../sensors/presentation/widgets/sensor_status_card.dart';
 import '../../domain/account_service.dart';
 import 'edit_profile_screen.dart';
@@ -210,6 +211,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const _SectionTitle('Sensores & Detección de Movimiento'),
                 const SizedBox(height: 8),
                 const SensorStatusCard(),
+                const SizedBox(height: 20),
+
+                // Sección: Asistente IA de Viaje
+                const _SectionTitle('Inteligencia Artificial'),
+                const SizedBox(height: 8),
+                AppCard(
+                  padding: EdgeInsets.zero,
+                  child: _MenuTile(
+                    icon: Icons.auto_awesome_rounded,
+                    label: 'Asistente de Viaje IA',
+                    subtitle:
+                        'Consultar recomendaciones e itinerarios inteligentes',
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const AiTripAssistantScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
                 const SizedBox(height: 20),
 
                 // Sección: Administración de Rutas en Mapa (Sección 3.3)

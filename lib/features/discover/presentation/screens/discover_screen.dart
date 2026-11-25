@@ -5,6 +5,7 @@ import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/app_states.dart';
 import '../../../routes/data/azure_catalog_remote_data_source.dart';
 import '../../../routes/data/models/api_models.dart';
+import '../../../routes/presentation/screens/ai_trip_assistant_screen.dart';
 
 /// Pantalla "Descubrir" – Catálogos oficiales de la API de Azure:
 /// medios de transporte, directorio de empresas y destinos turísticos.
@@ -103,6 +104,20 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Descubrir'),
+        actions: [
+          IconButton(
+            tooltip: 'Asistente de Viaje IA',
+            icon: const Icon(Icons.auto_awesome_rounded,
+                color: AppColors.secondary),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const AiTripAssistantScreen(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: _loadAll,

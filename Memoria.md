@@ -190,7 +190,16 @@ Flutter -> API central por HTTPS/REST. No acceso directo a Cosmos ni a ML/GenAI.
   - **Riesgos:** Ninguno. La simulación demo permanece 100% aislada; el acelerómetro exige consentimiento explícito previo y es revocable en todo momento.
   - **Relación con otros repos:** Contratos alineados con API central de Azure (`bustrack-api`); no se accede directamente a Cosmos DB.
 
-- **2026-11-18:** integración completa de endpoints de Azure, auditoría DevSecOps y versionamiento para Prueba Cerrada en Google Play Console.
+- **2026-11-25:** incremento de versionCode a 3 y regla permanente de versionamiento Play Console en AGENTS.md.
+  - **Decisión:** 
+    1. Actualizar `pubspec.yaml` a `version: 1.1.0+3` (`versionCode = 3`, `versionName = 1.1.0`), debido a que Google Play Console rechazó la subida de un nuevo AAB indicando que el código de versión 2 ya fue utilizado previamente.
+    2. Incorporar en `AGENTS.md` la regla obligatoria permanente (Sección 9: Versionamiento y Publicación en Google Play) que instruye a cualquier agente a incrementar siempre el `versionCode` numérico en `pubspec.yaml` cuando el usuario solicite subir o preparar un cambio de la app.
+  - **Motivo:** Evitar rechazos de subida en Google Play Console por conflicto de códigos de versión duplicados y asegurar cumplimiento estricto del versionamiento incremental.
+  - **Archivos afectados:** `pubspec.yaml`, `AGENTS.md`, `Memoria.md`.
+  - **Estado:** `flutter analyze` reporta 0 issues, `dart format` verificado con 0 cambios, `flutter test` aprueba las 47 pruebas unitarias y de widgets, y `check_sdd.ps1` valida `SDD-OK`.
+  - **Riesgos:** Ninguno.
+  - **Relación con otros repos:** Alineado con la pista de prueba en Google Play Console para `com.bustrackapp`.
+
   - **Decisión:** 
     1. **Auditoría e Integración de Endpoints:** Conectar endpoints reales reemplazando mocks y servicios locales:
        - Actualización de perfil y borrado de cuenta en `UsuariosController` (`PUT /api/v1/usuarios/me`, `DELETE /api/v1/usuarios/me`).

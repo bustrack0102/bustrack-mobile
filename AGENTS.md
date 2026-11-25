@@ -66,7 +66,12 @@ repositorios. No borrar historial. No declarar avances sin evidencia.
 - No hacer commit/push sin autorización explícita.
 - No marcar tareas como completadas solo por documentarlas.
 
-## 9. Errores a evitar
+## 9. Versionamiento y Publicación en Google Play
+
+- Cada vez que se solicite preparar o subir un cambio o nueva versión de la app para Google Play Console (Prueba Interna, Prueba Cerrada o Producción), **es obligatorio incrementar el código de versión (`versionCode`) en `pubspec.yaml`** (formato `version: X.Y.Z+<buildNumber>`, donde `<buildNumber>` debe ser estrictamente mayor al anterior; ej. de `1.1.0+2` a `1.1.0+3`).
+- Google Play rechaza cualquier AAB que reutilice un código de versión previamente subido.
+
+## 10. Errores a evitar
 
 - Copiar specs de otro stack.
 - Afirmar endpoints o recursos inexistentes.

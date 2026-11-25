@@ -80,7 +80,11 @@ class AuthInterceptor extends Interceptor {
       ApiConfig.refresh,
       ApiConfig.recuperarPassword,
       ApiConfig.restablecerPassword,
+      ApiConfig.verificarCorreo,
+      ApiConfig.reenviarVerificacion,
       ApiConfig.health,
+      ApiConfig.healthLive,
+      ApiConfig.healthReady,
     ];
     return publicEndpoints.contains(normalized);
   }

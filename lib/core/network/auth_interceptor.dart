@@ -29,6 +29,7 @@ class AuthInterceptor extends Interceptor {
     }
     options.headers['Accept'] = 'application/json';
     options.headers['Content-Type'] = 'application/json';
+    options.headers['X-API-Version'] = ApiConfig.apiVersion;
     return handler.next(options);
   }
 

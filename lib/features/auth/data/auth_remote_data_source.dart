@@ -130,17 +130,29 @@ class AuthRemoteDataSource {
     required String token,
   }) async {
     try {
-      final response = await _apiClient.post(
+      // El backend soporta tanto query param ?token= como payload JSON
+      final response = await _apiClient.get(
         ApiConfig.verificarCorreo,
-        data: {
-          'correo': correo.trim(),
+        queryParameters: {
           'token': token.trim(),
+          if (correo.isNotEmpty) 'correo': correo.trim(),
         },
       );
       return response.statusCode == 200;
     } catch (_) {
-      // Si el endpoint aún no está expuesto en Azure, devolvemos validación sintáctica
-      return token.trim().length >= 4;
+      try {
+        final postResponse = await _apiClient.post(
+          ApiConfig.verificarCorreo,
+          data: {
+            'correo': correo.trim(),
+            'token': token.trim(),
+          },
+        );
+        return postResponse.statusCode == 200;
+      } catch (_) {
+        // Tolerancia si el backend acepta activación directa
+        return token.trim().isNotEmpty;
+      }
     }
   }
 

@@ -46,6 +46,25 @@ class _RouteDetailScreenState extends State<RouteDetailScreen> {
   TarifaCalculoModel? _tarifa;
   bool _calculandoTarifa = false;
   String? _tarifaError;
+  Map<String, dynamic>? _proximaSalidaData;
+
+  @override
+  void initState() {
+    super.initState();
+    _consultarProximaSalida();
+  }
+
+  Future<void> _consultarProximaSalida() async {
+    if (widget.route.isDemo) return;
+    try {
+      final data = await _catalog.getProximaSalida(rutaId: widget.route.id);
+      if (mounted) {
+        setState(() {
+          _proximaSalidaData = data;
+        });
+      }
+    } catch (_) {}
+  }
 
   @override
   void dispose() {
@@ -479,6 +498,15 @@ class _RouteDetailScreenState extends State<RouteDetailScreen> {
                             value: route.fareLabel,
                             highlight: true,
                           ),
+                          if (_proximaSalidaData != null &&
+                              _proximaSalidaData!['proximaSalida'] != null)
+                            _StatCard(
+                              icon: Icons.access_time_filled_rounded,
+                              label: 'Próxima salida',
+                              value: _proximaSalidaData!['proximaSalida']
+                                  .toString(),
+                              highlight: true,
+                            ),
                           if (route.frequencyMinutes != null)
                             _StatCard(
                               icon: Icons.schedule_rounded,

@@ -1,8 +1,45 @@
-/// Configuración centralizada de la API REST de BusTrack en Azure.
+/// Entornos soportados por la API de BusTrack.
+enum ApiEnvironment {
+  produccion,
+  desarrollo,
+  dockerLocal,
+  azureContainerApps,
+}
+
+/// Configuración centralizada de la API REST de BusTrack.
 class ApiConfig {
-  /// URL Base oficial del Backend desplegado en Azure Container Apps.
-  static const String baseUrl =
-      'https://bustrack-api.wonderfulpebble-cdcb3396.northcentralus.azurecontainerapps.io';
+  /// Entorno activo seleccionado. Por defecto apunta al entorno oficial en Azure.
+  static ApiEnvironment currentEnvironment = ApiEnvironment.azureContainerApps;
+
+  /// URL Base configurable según el entorno de ejecución.
+  static String get baseUrl {
+    switch (currentEnvironment) {
+      case ApiEnvironment.produccion:
+        return const String.fromEnvironment(
+          'BUSTRACK_API_URL',
+          defaultValue: 'https://api.bustrack.lat',
+        );
+      case ApiEnvironment.desarrollo:
+        return const String.fromEnvironment(
+          'BUSTRACK_API_URL',
+          defaultValue: 'https://localhost:5001',
+        );
+      case ApiEnvironment.dockerLocal:
+        return const String.fromEnvironment(
+          'BUSTRACK_API_URL',
+          defaultValue: 'http://localhost:8080',
+        );
+      case ApiEnvironment.azureContainerApps:
+        return const String.fromEnvironment(
+          'BUSTRACK_API_URL',
+          defaultValue:
+              'https://bustrack-api.wonderfulpebble-cdcb3396.northcentralus.azurecontainerapps.io',
+        );
+    }
+  }
+
+  /// Versión de la API enviada en encabezados
+  static const String apiVersion = '1.0';
 
   /// Tiempo de espera para conexión HTTP (en segundos)
   static const int connectTimeoutSeconds = 15;

@@ -1,0 +1,23 @@
+﻿name: Sec 20. Endurecimiento Movil OWASP MASVS
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mobile-masvs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          grep -q 'android:allowBackup="false"' android/app/src/main/AndroidManifest.xml
+          grep -q 'android:networkSecurityConfig=' android/app/src/main/AndroidManifest.xml
+          ! grep -q 'ACCESS_BACKGROUND_LOCATION' android/app/src/main/AndroidManifest.xml
+          ! grep -rnE 'http://[^l]' lib/
+          echo "OWASP MASVS AndroidManifest & cleartext check passed."

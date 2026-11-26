@@ -1,0 +1,73 @@
+name: Quality & Testing Repertoire
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lint-format-dead-code:
+    name: 1. Linting, Formato y Código Muerto
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+      - run: dart format --output=none --set-exit-if-changed .
+      - run: flutter analyze
+
+  unit-contract-concurrency-security:
+    name: 2. Unitarias, Contrato, Concurrencia y Seguridad
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+      - run: flutter test test/unit_validation_test.dart test/contract_schema_test.dart test/concurrency_race_test.dart test/security_fintech_test.dart
+
+  widgets-snapshot-coverage:
+    name: 3. Widgets, Snapshot Estructural y Cobertura
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+      - run: flutter test test/widget_test.dart test/snapshot_structure_test.dart --coverage
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mobile-quality-coverage
+          path: coverage/lcov.info
+          retention-days: 14
+
+  dependencies-check:
+    name: 4. Verificación de Dependencias
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+      - run: flutter pub outdated || true
+
+  sdd-and-semgrep:
+    name: 5. Guardrails SDD y Semgrep
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pwsh -File scripts/check_sdd.ps1
+      - uses: semgrep/semgrep-action@v1
+        with:
+          config: .semgrep/rules/semgrep.yaml

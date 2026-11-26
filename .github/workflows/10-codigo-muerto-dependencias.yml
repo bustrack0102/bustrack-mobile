@@ -1,0 +1,25 @@
+﻿name: 10. Codigo Muerto y Dependencias
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dead-code-deps:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+      - run: flutter pub outdated || true
+      - uses: semgrep/semgrep-action@v1
+        with:
+          config: .semgrep/rules/semgrep.yaml

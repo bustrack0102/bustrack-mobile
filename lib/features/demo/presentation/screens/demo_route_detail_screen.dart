@@ -357,6 +357,127 @@ class _DemoRouteDetailScreenState extends State<DemoRouteDetailScreen> {
                   );
                 },
               ),
+
+              const SizedBox(height: 20),
+
+              // Sección de Reseñas y Calificaciones de demostración
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Opiniones de Pasajeros',
+                      style: AppTypography.titleMedium),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: AppColors.tertiary,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.star_rounded,
+                            size: 14, color: AppColors.warning),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${route.reviews.isNotEmpty ? (route.reviews.map((r) => r.stars).reduce((a, b) => a + b) / route.reviews.length).toStringAsFixed(1) : "5.0"} (Demo)',
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.secondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+
+              if (route.reviews.isEmpty)
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: AppColors.surfaceWhite,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: AppColors.inputBorder),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      'Sé el primero en calificar esta ruta en modo demostración.',
+                      style: AppTypography.bodySmall,
+                    ),
+                  ),
+                )
+              else
+                ...route.reviews.map((rev) => Container(
+                      margin: const EdgeInsets.only(bottom: 10),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceWhite,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: AppColors.inputBorder),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(rev.userName,
+                                  style: AppTypography.labelLarge),
+                              Row(
+                                children: List.generate(
+                                  5,
+                                  (i) => Icon(
+                                    i < rev.stars
+                                        ? Icons.star_rounded
+                                        : Icons.star_border_rounded,
+                                    size: 14,
+                                    color: AppColors.warning,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Text(rev.comment, style: AppTypography.bodySmall),
+                          const SizedBox(height: 4),
+                          Text(rev.date, style: AppTypography.labelSmall),
+                        ],
+                      ),
+                    )),
+              const SizedBox(height: 12),
+
+              // Botón simulado para calificar en demo
+              OutlinedButton.icon(
+                onPressed: () {
+                  showDialog<void>(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: const Text('Calificar en Modo Demo'),
+                      content: const Text(
+                        'En el modo demostración tu calificación se registra localmente y no afecta la base de datos real de usuarios.',
+                        style: AppTypography.bodySmall,
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(ctx).pop(),
+                          child: const Text('Entendido'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.rate_review_outlined, size: 16),
+                label: const Text('Añadir reseña de prueba'),
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 44),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
             ],
           ),
         ),

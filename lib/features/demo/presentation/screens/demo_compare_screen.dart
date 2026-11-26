@@ -144,6 +144,78 @@ class DemoCompareScreen extends StatelessWidget {
                   ),
                 );
               }),
+              const SizedBox(height: 20),
+              const Text(
+                'Directorio de Empresas Concesionarias (Demo)',
+                style: AppTypography.titleMedium,
+              ),
+              const SizedBox(height: 12),
+              ...DemoMockData.companies.map((company) {
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: AppColors.surfaceWhite,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: AppColors.inputBorder),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: AppColors.tertiary.withValues(alpha: 0.5),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Center(
+                          child: Text(
+                            company.acronym,
+                            style: const TextStyle(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(company.name, style: AppTypography.labelLarge),
+                            const SizedBox(height: 2),
+                            Text(
+                              'Flota: ${company.fleetType} · ${company.totalUnits} uds.',
+                              style: AppTypography.bodySmall,
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              'Cobertura: ${company.coverageArea}',
+                              style: AppTypography.labelSmall,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          const Icon(Icons.star_rounded,
+                              size: 15, color: AppColors.warning),
+                          const SizedBox(width: 2),
+                          Text(
+                            company.averageRating.toStringAsFixed(1),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              }),
               const SizedBox(height: 16),
               Container(
                 padding: const EdgeInsets.all(14),
@@ -158,7 +230,7 @@ class DemoCompareScreen extends StatelessWidget {
                     SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        'Recomendación inteligente: Para traslados rápidos en horas pico, la línea L-102 ofrece carril exclusivo.',
+                        'Recomendación inteligente: Para traslados rápidos en horas pico, la línea L-01 y el Troncal H-01 cuentan con carril exclusivo.',
                         style: TextStyle(fontSize: 11, height: 1.35),
                       ),
                     ),

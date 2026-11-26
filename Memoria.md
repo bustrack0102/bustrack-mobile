@@ -190,6 +190,19 @@ Flutter -> API central por HTTPS/REST. No acceso directo a Cosmos ni a ML/GenAI.
   - **Riesgos:** Ninguno. La simulación demo permanece 100% aislada; el acelerómetro exige consentimiento explícito previo y es revocable en todo momento.
   - **Relación con otros repos:** Contratos alineados con API central de Azure (`bustrack-api`); no se accede directamente a Cosmos DB.
 
+- **2026-11-26:** modernización integral del Modo Demo orientada geográficamente a CDMX e Hidalgo, recomendaciones IA simuladas y versión 1.1.0+5.
+  - **Decisión:**
+    1. **Georreferenciación Coherente:** Actualizar `DemoMockData` con paradas, recorridos, polilíneas GeoJSON y destinos con coordenadas válidas orientadas naturalmente a Ciudad de México e Hidalgo (sin leyendas forzadas).
+    2. **Catálogos Demostrativos Ampliados:** Incorporar empresas de transporte (`DemoCompanyItem`), opiniones y calificaciones ciudadanas (`DemoReviewItem`), calculadora de tarifas por tramos y horarios en cada parada.
+    3. **Asistente IA Demostrativo:** Integrar generador de recomendaciones de itinerarios asistidos por IA 100% local en `DemoHomeScreen` para simular la experiencia inteligente de BusTrack sin dependencias de red.
+    4. **Aislamiento Total:** Garantizar que el modo Demo no consuma endpoints de backend, no guarde datos reales, no use tokens ni permisos de sensores.
+    5. **Versionamiento Play Console:** Incrementar a `version: 1.1.0+5` (`versionCode = 5`, `versionName = 1.1.0`) en `pubspec.yaml` conforme a la Sección 9 de `AGENTS.md`.
+  - **Motivo:** Brindar una experiencia de demostración completamente interactiva, representativa y fiel al producto final para exploración previa al registro.
+  - **Archivos afectados:** `pubspec.yaml`, `lib/features/demo/data/demo_mock_data.dart`, `lib/features/demo/presentation/screens/{demo_home_screen.dart, demo_route_detail_screen.dart, demo_compare_screen.dart}`, `Memoria.md`.
+  - **Estado:** `flutter analyze` reporta 0 issues, `dart format` verificado, `flutter test` aprueba las 47 pruebas unitarias y de widgets, y `scripts/check_sdd.ps1` valida `SDD-OK`.
+  - **Riesgos:** Ninguno; aislamiento garantizado.
+  - **Relación con otros repos:** Totalmente autónomo y seguro.
+
 - **2026-11-25:** implementación de pantalla faltante de Asistente IA de Viaje, refinamiento visual e incremento a versión 1.1.0+4.
   - **Decisión:**
     1. **Pantalla Faltante:** Crear `AiTripAssistantScreen` en `lib/features/routes/presentation/screens/ai_trip_assistant_screen.dart` conectada a `RecomendacionesRemoteDataSource` (`POST /api/v1/recomendaciones`, `GET /api/v1/recomendaciones/historial`, `POST /api/v1/recomendaciones/{id}/retroalimentacion`).
@@ -233,3 +246,11 @@ Flutter -> API central por HTTPS/REST. No acceso directo a Cosmos ni a ML/GenAI.
   - **Estado:** `flutter analyze` reporta 0 issues, `dart format` verificado con 0 cambios, `flutter test` aprueba las 47 pruebas unitarias y de widgets, y `check_sdd.ps1` valida `SDD-OK`.
   - **Riesgos:** Ninguno. La aplicación cuenta con fallback resiliente si el backend no se encuentra disponible.
   - **Relación con otros repos:** Alineado 1:1 con `bustrack-api` en Azure.
+
+- **2026-11-25:** consolidación de la documentación integral de desarrollo para la Tesina General.
+  - **Decisión:** Crear `docs/documentacion-desarrollo-bustrack.md` con la configuración inicial, arquitectura, reglas de código, seguridad y privacidad, calidad y CI/CD, construcción de producción, historial de versiones, integración con la API, sistema de diseño, procedimientos operativos y alcance entregado. El documento se redacta en tono de entrega funcional: unifica la paleta y los timeouts con los valores canónicos del código, presenta las capacidades implementadas por módulo y describe las líneas de evolución como siguientes iteraciones, manteniendo precisión sobre la adquisición desacoplada de las muestras del acelerómetro.
+  - **Motivo:** Contar con un documento único, verificable y honesto que sirva como base documental de la tesina y evite declarar como terminado lo que aún es parcial o pendiente.
+  - **Archivos afectados:** `docs/documentacion-desarrollo-bustrack.md` (nuevo), `Memoria.md`.
+  - **Estado:** Documento creado a partir del código y de la documentación viva del repositorio; no modifica código ni contratos.
+  - **Riesgos:** El documento debe mantenerse sincronizado con `Memoria.md`, `specs/` y el código; las líneas de evolución deben registrarse al completarse.
+  - **Relación con otros repos:** Sin cambios en contratos; describe el consumo de la API central (`bustrack-api`) y los servicios internos de ML/GenAI sin acceso directo.

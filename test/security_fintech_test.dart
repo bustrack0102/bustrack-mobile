@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:bustrack_mobile/main.dart';
+import 'package:bustrack_mobile/features/auth/presentation/screens/login_screen.dart';
 import 'package:bustrack_mobile/features/auth/presentation/screens/otp_verification_screen.dart';
+import 'package:bustrack_mobile/features/auth/presentation/screens/register_screen.dart';
 
 void main() {
   group('BusTrack Mobile - Seguridad Fintech y PII', () {
     testWidgets('1. LoginScreen oculta contrasena', (WidgetTester t) async {
-      await t.pumpWidget(const BusTrackApp());
-      await t.tap(find.text('Comenzar'));
-      await t.pumpAndSettle();
+      await t.pumpWidget(
+        MaterialApp(
+          home: LoginScreen(
+            onRegisterTap: () {},
+            onLoginSuccess: () {},
+            onForgotPasswordTap: () {},
+            onDemoTap: () {},
+          ),
+        ),
+      );
 
       final f = t.widgetList<EditableText>(find.byType(EditableText));
       expect(f.any((field) => field.obscureText), isTrue);
@@ -32,12 +40,15 @@ void main() {
     });
 
     testWidgets('3. RegisterScreen oculta contrasena', (WidgetTester t) async {
-      await t.pumpWidget(const BusTrackApp());
-      await t.tap(find.text('Comenzar'));
-      await t.pumpAndSettle();
-
-      await t.tap(find.text('Regístrate aquí'));
-      await t.pumpAndSettle();
+      await t.pumpWidget(
+        MaterialApp(
+          home: RegisterScreen(
+            onLoginTap: () {},
+            onRegisterSuccess: (_) {},
+            onDemoTap: () {},
+          ),
+        ),
+      );
 
       final f = t.widgetList<EditableText>(find.byType(EditableText));
       expect(f.any((field) => field.obscureText), isTrue);

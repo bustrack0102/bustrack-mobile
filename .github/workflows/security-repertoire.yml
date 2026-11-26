@@ -1,0 +1,50 @@
+name: Security Repertoire (13 Gates)
+
+on:
+  push:
+    branches: [feat/security-and-engineering-repertoire, main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sast-and-secrets:
+    name: 1-3-9. SAST, Secretos y Supply Chain
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 25
+      - uses: semgrep/semgrep-action@v1
+        with:
+          config: .semgrep/rules/semgrep.yaml
+      - name: Secret & pubspec.lock Supply Chain Audit
+        run: |
+          pwsh -File scripts/run_mobile_security_repertoire.ps1
+
+  sca-licenses-and-lint:
+    name: 2-10-11. SCA, Licencias y Analisis Estatico
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+      - run: dart format --output=none --set-exit-if-changed .
+      - run: flutter analyze
+      - run: flutter pub outdated || true
+
+  auth-fuzz-crypto-and-engineering:
+    name: 7-8-13. Auth, Fuzzing, Propiedades y Crypto
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+      - run: flutter test test/engineering_repertoire_test.dart test/security_fintech_test.dart test/unit_validation_test.dart --coverage

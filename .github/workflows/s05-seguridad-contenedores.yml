@@ -1,0 +1,18 @@
+﻿name: Sec 05. Contenedores (N/A Movil)
+
+on:
+  push:
+    branches: [feat/security-and-engineering-repertoire, main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  container-security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "N/A en cliente movil Flutter; la API gestiona escaneo Trivy."

@@ -1,0 +1,18 @@
+﻿name: Sec 04. DAST (N/A Cliente Movil)
+
+on:
+  push:
+    branches: [feat/security-and-engineering-repertoire, main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dast:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "N/A en app cliente Flutter sin servidor HTTP propio."

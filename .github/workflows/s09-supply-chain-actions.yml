@@ -17,6 +17,11 @@ jobs:
       - uses: actions/checkout@v4
       - run: pwsh -File scripts/run_mobile_security_repertoire.ps1
       - run: |
-          for f in .github/workflows/*.yml; do
-            grep -q "permissions:" "" || { echo "Missing permissions in "; exit 1; }
-          done
+          pwsh -Command '
+            Get-ChildItem .github/workflows -Filter *.yml | ForEach-Object {
+              if ((Get-Content $_.FullName -Raw) -notmatch "permissions:") {
+                throw "Missing permissions in $($_.Name)"
+              }
+            }
+            Write-Host "All workflows enforce explicit permissions."
+          '

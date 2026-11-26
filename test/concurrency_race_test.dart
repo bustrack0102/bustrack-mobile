@@ -16,8 +16,7 @@ class _ThreadSafeTokenCache {
 
 void main() {
   group('BusTrack Mobile - Concurrencia y Race Conditions', () {
-    test('Multiples operaciones paralelas mantienen consistencia sin duplicados',
-        () async {
+    test('Multiples operaciones paralelas sin duplicados', () async {
       final cache = _ThreadSafeTokenCache();
       final ids = List<String>.generate(25, (int i) => 'session-jti-$i');
 
@@ -27,8 +26,7 @@ void main() {
       expect(results.every((bool revoked) => revoked), isTrue);
     });
 
-    test('Revocacion concurrente repetida del mismo token es idempotente',
-        () async {
+    test('Revocacion concurrente repetida es idempotente', () async {
       final cache = _ThreadSafeTokenCache();
       await Future.wait(
         List<Future<void>>.generate(
